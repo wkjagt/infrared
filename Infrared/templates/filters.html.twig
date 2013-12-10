@@ -1,0 +1,25 @@
+<section class="filters">
+    <form class="form-inline well">
+        <input type="hidden" id="query">
+
+        <label class="control-label" for="page"><span class="page-url">{{ domain }}</span></label>
+        <select id="page" class="js-select">
+            <option>(select a page)</option>
+            {% for page in pages|sort %}
+                {% if page.path is defined %}
+                <option value="{{ page.url }}">{{ page.path }}</option>
+                {% else %}
+                <option value="{{ page.name }}">{{ page.url }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <label class="control-label" for="screenwidth">on screens</label>
+        <select id="screenwidth" class="js-select">
+            <option value="0">(select screen width)</option>
+            {% for screenwidth in screenwidths|sort %}
+            <option value="{{ screenwidth }}">{{ screenwidth }} pixels wide</option>                
+            {% endfor %}
+        </select>
+    </form>
+</section>

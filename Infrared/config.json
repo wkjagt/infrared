@@ -1,0 +1,21 @@
+{
+    "domains" : [
+        {
+            "domain" : "testsite.infraredapp.com",
+            "apikey" : "12345678",
+            "url_patterns" : {
+                ":/\\d+:" : "/id"
+            }
+        }
+    ],
+    "storage" : {
+        "redis" : {
+            "parameters" : {
+                "scheme" : "tcp",
+                "host" : "localhost",
+                "port" : 6379,
+                "database" : 15
+            }
+        }        
+    }
+}

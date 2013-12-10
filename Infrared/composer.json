@@ -1,0 +1,9 @@
+{
+    "require": {
+        "webglue/webglue": "@dev",
+        "predis/predis": "v0.8.2"
+    },
+    "autoload": {
+        "psr-0": { "Infrared": "src/" }
+    }
+}
