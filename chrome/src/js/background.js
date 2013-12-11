@@ -1,7 +1,6 @@
 
 
 function onMsg(msg, sender, sendResponse) {
-
     switch(msg.action) {
         case 'get_data':
             var server = 'http://dev.infraredapp.com',
