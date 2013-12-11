@@ -9,14 +9,28 @@
         canvas: $('<canvas id="infrared-canvas">'),
         heatmap: null,
         timer: null,
+        state: 'stopped',
         init : function(){
-
-            chrome.runtime.sendMessage(null, { action : 'show_icon' }, function(response){});
-            $('body').append(this.canvas);
-            this.heatmap = createWebGLHeatmap({canvas: this.canvas[0]});
             var self = this;
 
-            var heatmapLoop = function(){
+            self.setupCanvas();
+            self.startRefreshLoop();
+            self.registerListeners();
+
+            self.showIcon();
+        },
+        showIcon : function() {
+            chrome.runtime.sendMessage(null, { action : 'show_icon' }, function(response){});            
+        },
+        setupCanvas : function() {
+            $('body').append(this.canvas);
+            this.heatmap = createWebGLHeatmap({canvas: this.canvas[0]});
+            this.canvas.hide();
+        },
+        startRefreshLoop : function() {
+            var self = this;
+
+            var refreshLoop = function(){
                 // update heatmap with new data
                 self.heatmap.update();
                 self.heatmap.display();
@@ -26,12 +40,10 @@
                 self.heatmap.blur();
 
                 setTimeout(function () {
-                    requestAnimationFrame(heatmapLoop);
+                    requestAnimationFrame(refreshLoop);
                 }, 100);
             };
-            requestAnimationFrame(heatmapLoop);
-
-            self.registerListeners();
+            requestAnimationFrame(refreshLoop);
         },
         registerListeners : function() {
             var self = this;
@@ -41,27 +53,25 @@
                     case 'play':
                         self.play(); break;
                     case 'stop':
+                        self.state = 'stopped';
                         self.clear(); break;
                 }
             });
         },
         play : function() {
             self = this;
-
-            chrome.runtime.sendMessage(null,
-                // message
-                {
-                    action : 'get_data',
-                    page : window.location.pathname,
-                    domain : window.location.hostname,
-                },
-                // response callback
-                function(clicks) {
-                    self.addToHeatmap(clicks);
-                }
-            );
+            self.canvas.show();
+            self.state = 'playing';
+            chrome.runtime.sendMessage(null, {
+                action : 'get_data',
+                page : window.location.pathname,
+                domain : window.location.hostname,
+            }, function(clicks) {
+                self.addToHeatmap(clicks);
+            });
         },
         addToHeatmap : function(clicks) {
+            var self = this;
             if(this.timer) {
                 clearTimeout(this.timer);
                 this.timer = 0;
@@ -80,14 +90,18 @@
                     40,             // size
                     30/clicks.length             // intensity
                 );
-                if(++i < clicks.length) {
+                if(++i < clicks.length && self.state == 'playing') {
                     var delay = clicks[i]['elapsed'] - click['elapsed'];
                     this.timer = setTimeout(iterator, delay);
                 }
             })();
         },
         clear : function() {
+            clearTimeout(this.timer);
+            this.timer = 0;
+            
             this.heatmap.clear();
+            this.canvas.hide();
         }
     };
 
