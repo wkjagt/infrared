@@ -6,10 +6,12 @@
     if(!$('body').hasClass('infrared_enabled')) return;
 
     var infrared = {
+
         canvas: $('<canvas id="infrared-canvas">'),
         heatmap: null,
         timer: null,
         state: 'stopped',
+
         init : function(){
             var self = this;
 
@@ -36,7 +38,7 @@
                 self.heatmap.display();
 
                 // make old points slowly disappear
-                self.heatmap.multiply(0.99);
+                self.heatmap.multiply(0.95);
                 self.heatmap.blur();
 
                 setTimeout(function () {
@@ -62,6 +64,7 @@
             self = this;
             self.canvas.show();
             self.state = 'playing';
+
             chrome.runtime.sendMessage(null, {
                 action : 'get_data',
                 page : window.location.pathname,
@@ -81,7 +84,7 @@
             if(clicks.length == 0) return;
             var self = this, i = 0;
 
-            (function iterator() {
+            function iterator() {
                 var click = clicks[i];
 
                 self.heatmap.addPoint(
@@ -94,7 +97,9 @@
                     var delay = clicks[i]['elapsed'] - click['elapsed'];
                     this.timer = setTimeout(iterator, delay);
                 }
-            })();
+            };
+
+            setTimeout(iterator, clicks[i]['elapsed']);
         },
         clear : function() {
             clearTimeout(this.timer);
