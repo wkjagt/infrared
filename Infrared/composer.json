@@ -1,7 +1,11 @@
 {
     "require": {
         "webglue/webglue": "@dev",
-        "predis/predis": "v0.8.2"
+        "predis/predis": "v0.8.2",
+        "twig/twig": "v1.15.0",
+        "j4mie/idiorm": "v1.4.0",
+        "j4mie/paris": "v1.4.1",
+        "slim/slim": "2.*"
     },
     "autoload": {
         "psr-0": { "Infrared": "src/" }

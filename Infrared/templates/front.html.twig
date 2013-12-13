@@ -1,27 +1,11 @@
 <html>
 <head>
     <title>Infrared</title>
-
-    <link rel="stylesheet" type="text/css" href="/assets/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-    <script type="text/javascript">
-    var site = "{{ sitename }}";
-    </script>
 </head>
 <body>
-    {% include 'navbar.html.twig' %}
-    {% if sitename|length %}
-    {% include 'filters.html.twig' %}
-    {% include 'heatmap.html.twig' %}
-    {% endif %}
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/assets/js/heatmap.webgl.js"></script>
-    <script type="text/javascript" src="/assets/bootstrap-formhelpers/js/bootstrap-formhelpers-datepicker.en_US.js"></script>
-    <script type="text/javascript" src="/assets/bootstrap-formhelpers/js/bootstrap-formhelpers-datepicker.js"></script>
-    <script type="text/javascript" src="/assets/js/underscore-min.js"></script>
-    <script type="text/javascript" src="/assets/js/backbone-min.js"></script>
-    <script type="text/javascript" src="/assets/js/app.js"></script>
+    <form action="/come-in" method="post">
+        login: <input type="text" name="email">
+        <input type="submit" value="signup/login">
+    </form>
 </body>
 </html>

@@ -1,13 +1,13 @@
 {
-    "domains" : [
-        {
+    "domains" : {
+        "testsite.infraredapp.com": {
             "domain" : "testsite.infraredapp.com",
             "apikey" : "12345678",
             "url_patterns" : {
                 ":/\\d+:" : "/id"
             }
         }
-    ],
+    },
     "storage" : {
         "redis" : {
             "parameters" : {
@@ -16,6 +16,12 @@
                 "port" : 6379,
                 "database" : 15
             }
-        }        
+        },
+        "mysql" : {
+            "connection" : "mysql:host=localhost;dbname=infrared",
+            "user" : "root",
+            "pass" : ""
+        }
     }
+
 }

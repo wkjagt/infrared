@@ -2,110 +2,96 @@
 
 namespace Infrared;
 
-use WebGlue;
-use Infrared\Storage\RedisStorage;
+use Infrared\MiddleWare\SetupMiddleWare;
+use Infrared\MiddleWare\ApiKeyMiddleWare;
+use Infrared\MiddleWare\CrossDomainMiddleWare;
+use ORM;
 
 class App
 {
-    protected static $config;
+    protected $config;
 
-    protected static $domain = '';
+    protected $slim;
 
-    protected static $storage;
-
-    /**
-     * initialize the Infrared application
-     */
-    public static function init(WebGlue $webglue, $config)
+    protected function __construct($config)
     {
-        // config
-        static::$config = $config;
+        $this->config = $config;
+        $this->slim = new \Slim\Slim(array(
+            'debug' => true,
+            'config' => $config
+        ));
 
-        $redisClient = new \Predis\Client( (array) static::$config->storage->redis->parameters );
-        static::$storage = new RedisStorage($redisClient);
-
-        // before & after
-        $webglue->before(array(__CLASS__, 'before'));
-        $webglue->after(array(__CLASS__, 'after'));
-
-        // get clicks for a domain
-        $webglue->get('/domains/{domain:string}/clicks', array(__CLASS__, 'getClicks'), 'api', 'json');
-        $webglue->post('/clicks', array(__CLASS__, 'registerClicks'), 'js', 'json');
-
-        return $webglue;
+        $this->registerMiddleWare();
+        $this->addRoutes();
     }
 
-    /**
-     * Before all request
-     */
-    public static function before($webglue, $request, $response)
+    public function run()
     {
-        $response->headers->set('Cache-Control', 'no-cache');
-
-        if(in_array('api', $webglue['_route']->tags)) {
-            $apiKey = $request->query->get('apikey');
-            for($i = 0; $i < count(static::$config->domains); $i++) {
-                $domain = static::$config->domains[$i];
-
-                if($domain->domain == $request->attributes->get('domain') &&
-                    $domain->apikey != $request->query->get('apikey')) {
-
-                    $response->setStatusCode(400)
-                             ->setContent(json_encode(array('error' => 'INVALID_API_KEY')))
-                             ->send();
-                    exit();
-                }
-            }
-        }
-
-
-        if(in_array('js', $webglue['_route']->tags)) {
-            $origin = $request->headers->get('origin');
-            for($i = 0; $i < count(static::$config->domains); $i++) {
-                $domain = static::$config->domains[$i];
-
-                if($domain->domain == parse_url($origin, PHP_URL_HOST)) {
-                    static::$domain = $domain;
-                    $response->headers->set('Access-Control-Allow-Origin', $origin);
-                    return;
-                }
-            }
-            exit;
-        }
+        $this->slim->run();
     }
 
-    /**
-     * After all request
-     */
-    public static function after($webglue, $request, $response)
+    public static function init($config)
     {
-        if(in_array('json', $webglue['_route']->tags)) {
-            $response->headers->set('Content-Type', 'application/json');
-        }
+        return new static($config);
     }
 
-    /**
-     * Get get a json of clicks for a page
-     */
-    public static function getClicks($webglue, $request, $response)
+    protected function addRoutes()
     {
-        $domain = $request->attributes->get('domain');
+        $this->slim->get('/', array($this, 'front'));
+        $this->slim->post('/come-in', array($this, 'entrance'));
 
+        $this->slim->get('/api/domains/:domain/clicks', array($this, 'getClicks'))->name('get_clicks');
+        $this->slim->post('/api/domains/:domain/clicks', array($this, 'registerClicks'))->name('register_clicks');
+    }
+
+    protected function registerMiddleWare()
+    {
+        $this->slim->add(new SetupMiddleWare);
+        $this->slim->add(new ApiKeyMiddleWare);
+        $this->slim->add(new CrossDomainMiddleWare);
+    }
+
+    public function front() {
+        echo $this->slim->twig->render('front.html.twig', array());
+    }
+
+    public function entrance() {
+        $email = $this->slim->request->post('email');
+
+        $user = ORM::for_table('users')->where('email', $email)->find_one();
+        $sessionKey = md5(sprintf('%s%s%s', $email, microtime(), uniqid()));
+
+        if(!$user) {
+            // signup
+            $user = ORM::for_table('users')->create();
+            $user->email = $email;
+        }
+        $user->session_key = $sessionKey;
+        $user->save();
+
+        setcookie('session_key', $sessionKey);
+    }
+
+    public function getClicks($domain)
+    {
         // validate required parameters
-        if(!$page = $request->query->get('page')) {
-            $response->setStatusCode(400)->send();
-            exit;
+        if(!$page = $this->slim->request->get('page')) {
+            $this->slim->response->setStatus(400);
+            return;
         }
-        $clicks = static::$storage->retrieve($page, $domain);
-        $response->setContent(json_encode($clicks));
+        $clicks = $this->slim->storage->retrieve($page, $domain);
+        echo json_encode($clicks);
     }
 
-    public static function registerClicks($webglue, $request, $response)
-    {
-        $toStore = array();
-        $patterns = (array) static::$domain->url_patterns;
+    public function registerClicks()
+    {   
+        $domainName = $this->slim->domain;
+        $domain = $this->config->domains->$domainName;
 
-        foreach($request->request->get('clicks') as $click) {
+        $toStore = array();
+        $patterns = (array) $domain->url_patterns;
+
+        foreach($this->slim->request->post('clicks') as $click) {
 
             // apply patterns
             $click['page'] = preg_replace(
@@ -115,6 +101,7 @@ class App
             );
             $toStore[] = $click;
         }
-        static::$storage->store($toStore, static::$domain->domain);
+        $this->slim->storage->store($toStore, $domainName);
     }
+
 }
