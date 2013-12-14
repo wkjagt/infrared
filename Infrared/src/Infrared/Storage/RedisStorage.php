@@ -27,7 +27,8 @@ class RedisStorage extends Storage
 
         $clickInfo = array( 'x' => $data['click']['x'],
                             'y' => $data['click']['y'],
-                            'elapsed' => $data['elapsed'] );
+                            'elapsed' => $data['elapsed'],
+                            'centered' =>  $data['centered']);
 
         // open pipe line
         $pipe = $this->client->pipeline();

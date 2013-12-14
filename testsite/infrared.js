@@ -70,7 +70,8 @@
                 startTime : new Date().getTime(),
                 totalClicks : 0,
                 timeCutoff : options.time_cutoff || false, //ms or false
-                clickCutoff : options.click_cutoff || false
+                clickCutoff : options.click_cutoff || false,
+                centered : options.centered || false,
             };
             storage.init();
 
@@ -94,14 +95,13 @@
 
             var entry = {
                 click: {
-                    x : event.pageX,
+                    x : pluginGlobals.centered ? (event.pageX - (document.body.clientWidth/2)) : event.pageX,
                     y: event.pageY,
                 },
-                page : window.location.pathname,
-                domain : window.location.hostname,
-                time : now,
-                elapsed : elapsed
+                elapsed : elapsed,
+                centered : pluginGlobals.centered
             };
+
             full = storage.store(entry);
 
             if(!full) {
