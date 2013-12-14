@@ -110,7 +110,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: pluginGlobals.server_endpoint,
+                url: pluginGlobals.server_endpoint+'/api/domains/'+window.location.hostname+'/clicks',
                 data: {
                     clicks: storage.flush()
                 },

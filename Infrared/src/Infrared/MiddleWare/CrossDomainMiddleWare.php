@@ -2,28 +2,41 @@
 namespace Infrared\MiddleWare;
 
 use Slim\Middleware;
+use ORM;
 
 class CrossDomainMiddleWare extends Middleware
 {
     public function call()
     {
-        $url = $this->app->request->getPath();
-        $method = $this->app->request->getMethod();
-        $isClickRegister = $this->app->router()->getNamedRoute('register_clicks')->matches($url)
-            && $method == 'POST';
+        $request = $this->app->request;
+        $router = $this->app->router;
+
+        $routes = $router->getMatchedRoutes($request->getMethod(), $request->getPath());
+        $isClickRegister = $routes && $routes[0]->getName() === 'register_clicks';
 
         if(!$isClickRegister) {
             $this->next->call();
-        } else {
-            $origin = $this->app->request->headers->get('origin');
-            $this->app->response->headers->set('Access-Control-Allow-Origin', $origin);
+        } elseif($request->headers->has('origin')) {
 
-            $this->app->domain = parse_url($origin, PHP_URL_HOST);
+            $origin = $request->headers->get('origin');
+            $domainName = parse_url($origin, PHP_URL_HOST);
+
+            if($routes[0]->getParam('domain') !== $domainName) {
+                $this->app->halt(400);
+            }
+
+            // check if registered domain
+            // todo: cache this, so I don't hit the db for each click
+            $domain = ORM::for_table('domains')->where('domain_name', $domainName)->find_one();
+
+            if(!$result) {
+                $this->app->halt(403);
+            }
+
+            $this->app->response->headers->set('Access-Control-Allow-Origin', $origin);
+            $this->app->domain = $domain;
 
             $this->next->call();
-
-            // get user from context and check if he own the domain
-            // set proper header
         }
     }
 }

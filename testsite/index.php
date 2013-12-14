@@ -41,7 +41,7 @@
 <script type="text/javascript" src="infrared.js"></script>
 <script type="text/javascript">
 $().infrared('init', {
-    server_endpoint:'http://dev.infraredapp.com/clicks',
+    server_endpoint:'http://dev.infraredapp.com',
 });
 </script>
 </html>

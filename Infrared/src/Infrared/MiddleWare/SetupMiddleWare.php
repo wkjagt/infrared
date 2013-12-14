@@ -4,6 +4,7 @@ namespace Infrared\MiddleWare;
 use Slim\Middleware;
 use Infrared\Storage\RedisStorage;
 use Twig_Environment, Twig_Loader_Filesystem, Twig_Extension_Debug;
+use Infrared\Service\MailSender;
 use ORM;
 
 
@@ -30,6 +31,10 @@ class SetupMiddleWare extends Middleware
         $this->app->container->singleton('storage', function() use ($config) {
             $redisClient = new \Predis\Client( (array) $config->storage->redis->parameters );
             return new RedisStorage($redisClient);            
+        });
+
+        $this->app->container->singleton('mailsender', function() use ($config){
+            return new MailSender($config);
         });
 
         $this->next->call();

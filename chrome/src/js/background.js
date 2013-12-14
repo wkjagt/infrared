@@ -4,7 +4,7 @@ function onMsg(msg, sender, sendResponse) {
     switch(msg.action) {
         case 'get_data':
             var server = 'http://dev.infraredapp.com',
-                path = '/domains/' + msg.domain + '/clicks';
+                path = '/api/domains/' + msg.domain + '/clicks';
 
             // @todo : handle errors
             $.ajax({

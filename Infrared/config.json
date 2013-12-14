@@ -22,6 +22,9 @@
             "user" : "root",
             "pass" : ""
         }
+    },
+    "mandrill" : {
+        "api_key" : "-TwREiIz1HQrMkeY2cvwcA"
     }
 
 }
