@@ -29,7 +29,7 @@ class CrossDomainMiddleWare extends Middleware
             // todo: cache this, so I don't hit the db for each click
             $domain = ORM::for_table('domains')->where('domain_name', $domainName)->find_one();
 
-            if(!$result) {
+            if(!$domain) {
                 $this->app->halt(403);
             }
 

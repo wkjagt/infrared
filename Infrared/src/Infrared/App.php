@@ -56,7 +56,6 @@ class App
     }
 
     public function front() {
-        // $msg = 
         echo $this->slim->twig->render('front.html.twig', array());
     }
 
@@ -116,13 +115,14 @@ class App
 
     public function registerClicks()
     {   
-        $domainName = $this->slim->domain->domain_name;
+        $domain = $this->slim->domain;
 
         $toStore = array();
-        $patterns = (array) $domain->url_patterns;
+        $patterns = $domain->replacements
+            ? json_decode($domain->replacements, true)
+            : array();
 
         foreach($this->slim->request->post('clicks') as $click) {
-
             // apply patterns
             $click['page'] = preg_replace(
                 array_keys($patterns),
@@ -131,7 +131,7 @@ class App
             );
             $toStore[] = $click;
         }
-        $this->slim->storage->store($toStore, $domainName);
+        $this->slim->storage->store($toStore, $domain->domain_name);
     }
 
 }
