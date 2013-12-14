@@ -26,7 +26,8 @@ class MailSender
                     )
                 ),
                 'global_merge_vars' => $email->mergeVars
-            )
+            ),
+            true // async
         );
 
     }

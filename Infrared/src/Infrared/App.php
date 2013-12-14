@@ -40,6 +40,7 @@ class App
     {
         $this->slim->get('/', array($this, 'front'))->name('front');
         $this->slim->post('/login', array($this, 'login'));
+        $this->slim->get('/logout', array($this, 'logout'));
         $this->slim->get('/come-in/:session_key', array($this, 'validateSession'))->name('validate_session');
         $this->slim->get('/profile', array($this, 'profile'))->name('profile');
 
@@ -56,6 +57,9 @@ class App
     }
 
     public function front() {
+        if($this->slim->user) {
+            $this->slim->redirect($this->slim->urlFor('profile'));
+        }
         echo $this->slim->twig->render('front.html.twig', array());
     }
 
@@ -63,23 +67,31 @@ class App
         $email = $this->slim->request->post('email');
 
         $user = ORM::for_table('users')->where('email', $email)->find_one();
-        $sessionKey = md5(sprintf('%s%s%s', $email, microtime(), uniqid()));
+        $sessionKey = bin2hex(openssl_random_pseudo_bytes(40));
 
         $scheme = $this->slim->request->getScheme();
         $host = $this->slim->request->getHost();
-        $path = $this->slim->urlFor('validate_session', array('session_key'=> $sessionKey));
+        $path = $this->slim->urlFor('validate_session',
+            array('session_key'=> urlencode($sessionKey)));
 
         if(!$user) {
             // signup
             $user = ORM::for_table('users')->create();
             $user->email = $email;
-            $user->api_key = md5(sprintf('%s%s%s', $email, microtime(), uniqid()));
+            $user->api_key = bin2hex(openssl_random_pseudo_bytes(40));
         }
         $user->session_key = $sessionKey;
         $user->save();
 
         $mail = new Data\LoginEmail($email, sprintf('%s://%s%s', $scheme, $host, $path));
         $this->slim->mailsender->send($mail);
+        $this->slim->redirect($this->slim->urlFor('front'));
+    }
+
+    public function logout()
+    {
+        $this->slim->deleteCookie('session');
+        $this->slim->redirect($this->slim->urlFor('front'));
     }
 
     public function validateSession($sessionKey)
@@ -97,6 +109,9 @@ class App
 
     public function profile()
     {
+        if(!$this->slim->user) {
+            $this->slim->redirect($this->slim->urlFor('front'));
+        }
         echo 'woot!';
     }
 
