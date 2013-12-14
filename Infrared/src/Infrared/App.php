@@ -100,7 +100,7 @@ class App
         echo 'woot!';
     }
 
-    public function getClicks($domain)
+    public function getClicks($domainName)
     {
         $response = $this->slim->response;
 
@@ -108,8 +108,16 @@ class App
             $response->setStatus(400);
             return;
         }
-        $clicks = $this->slim->storage->retrieve($page, $domain);
+
+        $domain = ORM::for_table('domains')->where('domain_name', $domainName)->find_one();
+        $patterns = $domain->replacements
+            ? json_decode($domain->replacements, true)
+            : array();
+
+        $page = preg_replace(array_keys($patterns), array_values($patterns), $page);
+        $clicks = $this->slim->storage->retrieve($page, $domainName);
         $response->headers->set('Content-Type', 'application/json');
+
         $response->setBody(json_encode($clicks));
     }
 
