@@ -38,10 +38,15 @@ class App
 
     protected function addRoutes()
     {
+        // landing
         $this->slim->get('/', array($this, 'front'))->name('front');
+
+        // login
         $this->slim->post('/login', array($this, 'login'));
         $this->slim->get('/logout', array($this, 'logout'));
         $this->slim->get('/come-in/:session_key', array($this, 'validateSession'))->name('validate_session');
+
+        // profile
         $this->slim->get('/profile', array($this, 'profile'))->name('profile');
 
         $this->slim->get('/api/domains/:domain/clicks', array($this, 'getClicks'))->name('get_clicks');
@@ -60,7 +65,7 @@ class App
         if($this->slim->user) {
             $this->slim->redirect($this->slim->urlFor('profile'));
         }
-        echo $this->slim->twig->render('front.html.twig', array());
+        echo $this->slim->twig->render('landing/front.html.twig', array());
     }
 
     public function login() {
@@ -112,7 +117,7 @@ class App
         if(!$this->slim->user) {
             $this->slim->redirect($this->slim->urlFor('front'));
         }
-        echo 'woot!';
+        echo $this->slim->twig->render('admin/profile.html.twig', array());
     }
 
     public function getClicks($domainName)
