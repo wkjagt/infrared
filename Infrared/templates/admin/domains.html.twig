@@ -13,28 +13,56 @@
     </div>
     <div class="table-products">
         <div class="row">
+
+
+
+
             <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-md-3">
+                            Domain name
+                        </th>
+                        <th class="col-md-3">
+                            <span class="line"></span>
+                        </th>
+                    </tr>
+                </thead>
                 <tbody>
-                    <!-- row -->
                     {% for domain in domains %}
-                    <tr class="first">
+                    <tr {% if loop.first %}class="first"{% endif %} {% if loop.last %}class="last"{% endif %}>
                         <td>
-                            <a href="/domains/{{ domain.domain_name }}">{{ domain.domain_name }}</a>
+                            {{ domain.domain_name }}
                         </td>
                         <td>
                             <ul class="actions">
-                                <li class="last">
-                                    <a href="/domains/{{ domain.domain_name }}/delete"><i class="table-delete"></i></a>
-                                </li>
+                                <a class="delete" href="/domains/{{ domain.domain_name }}">Delete</a>
                             </ul>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
         </div>
     </div>
     <!-- end table sample -->
 </div>
-
 {% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $('a.delete').on('click', function(e){
+        e.preventDefault();
+        if (confirm("Press a button")) {
+            $.ajax({
+                url: $(this).attr('href'),
+                method : 'delete',
+                success : function(){
+                    location.reload();
+                }
+            });
+        }
+    });
+</script>
+{% endblock scripts %}

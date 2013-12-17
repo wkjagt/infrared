@@ -54,6 +54,9 @@ class App
         $this->slim->get(  '/domains', array($this, 'domains'))->name('domains');
         $this->slim->get(  '/domains/new', array($this, 'newDomain'))->name('new_domain');
         $this->slim->post( '/domains/new', array($this, 'saveDomain'))->name('register_domain');
+        
+        $this->slim->delete( '/domains/:domain', array($this, 'deleteDomain'))->name('delete_domain');
+
 
         $this->slim->get(  '/api/domains/:domain/clicks', array($this, 'getClicks'))->name('get_clicks');
         $this->slim->post( '/api/domains/:domain/clicks', array($this, 'registerClicks'))->name('register_clicks');
@@ -80,7 +83,6 @@ class App
             $this->slim->render('landing/front-confirm.html.twig', array());                    
         } else {
             $this->slim->render('landing/front.html.twig', array());
-
         }
     }
 
@@ -162,12 +164,39 @@ class App
                  && preg_match("/^.{1,253}$/", $domainName) //overall length check
                  && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainName); //length of each label
         
-        $exist = (bool) ORM::for_table('domains')
+        $exists = (bool) ORM::for_table('domains')
             ->where('domain_name', $domainName)->where('user_id', $this->slim->user->id)->count();
 
+        if(!$valid) {
+            $this->slim->flashNow('error', 'That doesn\'t seem to be a valid domain. Please try again.');
+            $this->slim->render('admin/new_domain.html.twig');
+        } elseif($exists) {
+            $this->slim->flashNow('error', 'You\'ve already registered that domain');
+            $this->slim->render('admin/new_domain.html.twig');
+        } else {
+            $domain = ORM::for_table('domains')->create();
+            $domain->user_id = $this->slim->user->id;
+            $domain->domain_name = $domainName;
+            $domain->replacements = json_encode(array(':/\\d+:' => '/id'));
+            $domain->save();
 
+            $this->slim->flash('info',
+                sprintf('The domain %s was successfully registered.', $domainName));
+            $this->slim->redirect($this->slim->urlFor('domains'));
+        }
+    }
 
+    public function deleteDomain($domainName)
+    {
 
+        $toDelete = ORM::for_table('domains')
+                ->where('domain_name', $domainName)
+                ->where('user_id', $this->slim->user->id)
+                ->find_one();
+        $toDelete->delete();
+
+        $this->slim->flash('info',
+            sprintf('The domain %s was successfully deleted.', $domainName));
     }
 
     public function getClicks($domainName)

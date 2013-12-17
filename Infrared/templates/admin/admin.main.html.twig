@@ -44,7 +44,7 @@
         {% endif %}
         {% if flash.error %}
         <div class="alert alert-danger">
-            <i class="icon-remove-sign"></i> Unexpected error. Please try again later.
+            <i class="icon-remove-sign"></i> {{ flash.error }}
         </div>
         {% endif %}
         {% block content %}{% endblock %}
@@ -125,5 +125,6 @@
             });
         });
     </script>
+    {% block scripts %}{% endblock scripts %}
 </body>
 </html>
