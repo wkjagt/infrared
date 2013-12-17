@@ -36,7 +36,19 @@
     <!-- navbar -->
     <header class="navbar navbar-inverse" role="banner">{% include 'admin/header.html.twig' %}</header>
     <div id="sidebar-nav">{% include 'admin/sidebar.html.twig' %}</div>
-    <div class="content">{% block content %}{% endblock %}</div>
+    <div class="content">
+        {% if flash.info %}
+        <div class="alert alert-success">
+            <i class="icon-ok-sign"></i> {{ flash.info }}
+        </div>
+        {% endif %}
+        {% if flash.error %}
+        <div class="alert alert-danger">
+            <i class="icon-remove-sign"></i> Unexpected error. Please try again later.
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
 
     <!-- scripts -->
     <script src="http://code.jquery.com/jquery-latest.js"></script>

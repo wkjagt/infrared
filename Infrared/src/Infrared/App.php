@@ -70,9 +70,18 @@ class App
 
     public function front() {
         if($this->slim->user) {
+            $this->slim->flash('info', 'Welcome back!');
             $this->slim->redirect($this->slim->urlFor('domains'));
         }
-        $this->slim->render('landing/front.html.twig', array());
+
+        $flash = $this->slim->view->getData('flash');
+
+        if($flash['info']) {
+            $this->slim->render('landing/front-confirm.html.twig', array());                    
+        } else {
+            $this->slim->render('landing/front.html.twig', array());
+
+        }
     }
 
     public function login() {
@@ -91,6 +100,9 @@ class App
             $user = ORM::for_table('users')->create();
             $user->email = $email;
             $user->api_key = bin2hex(openssl_random_pseudo_bytes(40));
+            $this->slim->flash('info', 'We\'ve emailed you a link to your new account!');
+        } else {
+            $this->slim->flash('info', 'We\'ve emailed you a link to login to your account!');
         }
         $user->session_key = $sessionKey;
         $user->save();
@@ -115,7 +127,7 @@ class App
             // redirect to domains
             $this->slim->redirect($this->slim->urlFor('domains'));
         }
-        $this->slim->flash('error', 'There seems to be somemthing wrong with that link');
+        $this->slim->flash('error', 'There seems to be something wrong with that link');
         $this->slim->redirect($this->slim->urlFor('front'));
     }
 
