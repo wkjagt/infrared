@@ -5,6 +5,7 @@
         "j4mie/idiorm": "v1.4.0",
         "j4mie/paris": "v1.4.1",
         "slim/slim": "2.*",
+        "slim/views": "0.*",
         "mandrill/mandrill": "1.0.50"
     },
     "autoload": {

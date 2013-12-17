@@ -16,6 +16,7 @@ class SessionMiddleWare extends Middleware
             $user = ORM::for_table('users')->where('session_key', $sessionKey)->find_one();
             if($user) {
                 $this->app->user = $user;
+                $this->app->view->setData('user', $user);
             }
         }
         $this->next->call();

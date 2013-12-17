@@ -13,18 +13,20 @@ class SetupMiddleWare extends Middleware
     public function call()
     {
         $config = $this->app->settings['config'];
+        $app = $this->app;
 
         ORM::configure($config->storage->mysql->connection);
         ORM::configure('username', $config->storage->mysql->user);
 
-        $this->app->container->singleton('twig', function() {
-            $twig = new Twig_Environment(
-                new Twig_Loader_Filesystem(__DIR__.'/../../../templates'),
-                array('debug' => true)
-            );
-            $twig->addExtension(new Twig_Extension_Debug());
-            return $twig;
-        });
+        $app->view(new \Slim\Views\Twig());
+        $app->view->parserOptions = array(
+            'charset' => 'utf-8',
+            'cache' => realpath(__DIR__.'/../../../templates/cache'),
+            'auto_reload' => true,
+            'strict_variables' => false,
+            'autoescape' => true
+        );
+        $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
         $this->app->context = array();
 
