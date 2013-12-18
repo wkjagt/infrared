@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 
 var Infrared = {
     pluginGlobals : {},
@@ -8,13 +8,13 @@ var Infrared = {
             flush == flush || false;
 
             if(flush) {
-                localStorage.infrared = JSON.stringify([]);
+                localStorage.setItem('infrared', JSON.stringify([]));
             }
         },
         store : function(data) {
             var stored = JSON.parse(this.getStored());
             stored.push(data);
-            localStorage.infrared = JSON.stringify(stored);
+            localStorage.setItem('infrared', JSON.stringify(stored));
 
             if(stored.length >= Infrared.pluginGlobals.max_storage) {
                 return true;
@@ -27,7 +27,7 @@ var Infrared = {
             return stored;
         },
         getStored : function() {
-            return localStorage.infrared;
+            return localStorage.getItem('infrared') || '[]';
         }
     },
     init : function( options ) {
