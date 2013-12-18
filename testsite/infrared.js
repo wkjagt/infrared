@@ -99,7 +99,8 @@
                     y: event.pageY,
                 },
                 elapsed : elapsed,
-                centered : pluginGlobals.centered
+                centered : pluginGlobals.centered,
+                page : window.location.pathname
             };
 
             full = storage.store(entry);
