@@ -1,24 +1,51 @@
 {% extends 'admin/admin.main.html.twig' %}
 
+{% block styles %}
+    <link rel="stylesheet" href="/assets/admin/css/bootstrap/docs.css" type="text/css" media="screen" />
+{% endblock styles %}
+
 {% block content %}
 <div id="pad-wrapper">
-    <div class="row">
-        <h2>Instructions</h2>
-        <p>Follow these instructions to get you all up and running</p>
-    </div>
+    <div class="col-md-10">
+        <div class="page-header">
+          <h1 id="type">Instructions</h1>
+        </div>
 
-    <div class="row">
-        <h4>Javascript library</h4>
-        <p>lorem</p>
-    </div>
+        <!-- Headings -->
+        <h3>Register a domain</h3>
+        <p>
+            When your site starts sending us clicks, we want to make sure it actually has
+            the right to do so. Tell us on what domain you want to use Infrared on the
+            <a href="/domains/new">New domain</a> page.
+        </p>
 
+        <h3>Add a bit of JavaScript to your page</h3>
+        <p>
+            Add the following bit of javascript to your page, just before the
+            <code>&lt;/body&gt;</code> closing tag:
+        </p>
+            <pre><code>&lt;script type="text/javascript" src="{{ request.getScheme }}://{{ request.getHost }}/plugin/infrared.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+Infrared.init({
+    centered:true
+});
+&lt;/script&gt;
+</code></pre>
+        <p>
+            Use the <code>centered</code> option when the content of your website is centered.
+            This way, clicks will be recorded and displayed correctly for any screen resolution.
+        </p>
 
-{#     <div>
-    </div>
- #}
-{#     <div class="alert alert-info">
-        <i class="icon-exclamation-sign"></i>
-        Your API key: {{ api_key }}
-    </div>
- #}</div>
+        <h3>Install our chrome extension</h3>
+        <p>
+            To see an animated heatmap of your user's click behaviour, you need to install our Chrome extension. Go to the page on
+            your site for which you want to see a heatmap, and click the Infrared logo that's
+            added to the right of your browser's address bar to start the animation.
+        </p>
+
+        <p>
+            That's it! Have fun!
+        </p>
+     </div>
+ </div>
 {% endblock content %}

@@ -15,15 +15,14 @@
     </div>
     <div class="table-products">
         <div class="row filter-block">
-            <h4>
+            <p>
                 <i class="icon-lightbulb"></i>
                 While we're in beta, you'll be able to register a maximum of two domains.
                 We hope to remove this limitation as soon as possible.
-            </h4>
+            </p>
         </div>
-
+        {% if domains|length %}
         <div class="row">
-
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -43,15 +42,15 @@
                         </td>
                         <td>
                             <ul class="actions">
-                                <a class="delete" href="/domains/{{ domain.domain_name }}">Delete</a>
+                                <a class="delete" data-name="{{ domain.domain_name }}" href="/domains/{{ domain.domain_name }}">Delete</a>
                             </ul>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-
         </div>
+        {% endif %}
     </div>
     <!-- end table sample -->
 </div>
@@ -61,7 +60,7 @@
 <script type="text/javascript">
     $('a.delete').on('click', function(e){
         e.preventDefault();
-        if (confirm("Press a button")) {
+        if (confirm("Are you sure you want to delete "+$(this).data('name')+"?")) {
             $.ajax({
                 url: $(this).attr('href'),
                 method : 'delete',

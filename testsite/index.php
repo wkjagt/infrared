@@ -39,11 +39,10 @@
     </div>
 </body>
 
-<script type="text/javascript" src="/infrared-vanilla.js"></script>
+<script type="text/javascript" src="http://dev.infraredapp.com/plugin/infrared.js"></script>
 <script type="text/javascript">
 Infrared.init({
     centered:true
 });
 </script>
-
 </html>

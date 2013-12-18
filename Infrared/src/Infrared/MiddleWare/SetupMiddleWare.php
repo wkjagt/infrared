@@ -21,13 +21,13 @@ class SetupMiddleWare extends Middleware
         $app->view(new \Slim\Views\Twig());
         $app->view->parserOptions = array(
             'charset' => 'utf-8',
-            'cache' => __DIR__.'/../../../templates/cache',
+            // 'cache' => __DIR__.'/../../../templates/cache',
             'auto_reload' => true,
             'strict_variables' => false,
             'autoescape' => true
         );
         $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
-
+        $app->view->setData('request', $app->request);
         $this->app->context = array();
 
         $this->app->container->singleton('storage', function() use ($config) {
