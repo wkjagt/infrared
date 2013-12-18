@@ -20,15 +20,15 @@ class RedisStorage extends Storage
         }
     }
 
-    protected function storeClick($data, $domain)
+    public function storeClick($data, $domain)
     {
         // #  create unique id for new click
         $id = sprintf('click:%d', $this->client->incr('click:id'));
 
-        $clickInfo = array( 'x' => $data['click']['x'],
-                            'y' => $data['click']['y'],
-                            'elapsed' => $data['elapsed'],
-                            'centered' =>  $data['centered']);
+        $clickInfo = array( 'x' => $data->click->x,
+                            'y' => $data->click->y,
+                            'elapsed' => $data->elapsed,
+                            'centered' =>  $data->centered);
 
         // open pipe line
         $pipe = $this->client->pipeline();
@@ -39,13 +39,13 @@ class RedisStorage extends Storage
         $pipe->expire($id, 7 * 24 * 60 * 60);
 
         // add id id to page set so we can get clicks for one page
-        $pipe->sadd("clicks_by_page:$domain:".$data['page'], $id);
+        $pipe->sadd("clicks_by_page:$domain:".$data->page, $id);
 
         // add id to page set so we can get clicks for one page
         $pipe->sadd("clicks_by_site:$domain", $id);
 
         // keep a list of pages
-        $pipe->sadd("$domain:pages", $data['page']);
+        $pipe->sadd("$domain:pages", $data->page);
 
         $pipe->execute();
     }

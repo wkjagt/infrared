@@ -88,7 +88,7 @@
                 var click = clicks[i];
 
                 self.heatmap.addPoint(
-                    click['centered'] == 'true' ? document.body.clientWidth/2 + parseInt(click['x']) : click['x'], // x coordinate
+                    click['centered'] == 1 ? document.body.clientWidth/2 + parseInt(click['x']) : click['x'], // x coordinate
                     click['y'], // y coordinate
                     40,             // size
                     30/clicks.length             // intensity

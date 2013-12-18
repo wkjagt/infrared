@@ -12,7 +12,8 @@ class CrossDomainMiddleWare extends Middleware
         $router = $this->app->router;
 
         $routes = $router->getMatchedRoutes($request->getMethod(), $request->getPath());
-        $isClickRegister = $routes && $routes[0]->getName() === 'register_clicks';
+        $isClickRegister = $routes &&
+            in_array($routes[0]->getName(), array('preflight', 'register_clicks'));
 
         if(!$isClickRegister) {
             $this->next->call();
@@ -34,6 +35,7 @@ class CrossDomainMiddleWare extends Middleware
             }
 
             $this->app->response->headers->set('Access-Control-Allow-Origin', $origin);
+            $this->app->response->headers->set('Access-Control-Allow-Headers', 'Content-type');
             $this->app->domain = $domain;
 
             $this->next->call();

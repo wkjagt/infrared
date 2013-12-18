@@ -48,7 +48,7 @@ class App
         $this->slim->get(  '/logout', array($this, 'logout'));
         $this->slim->get(  '/come-in/:session_key', array($this, 'validateSession'))->name('validate_session');
 
-        $this->slim->get(  '/apikey', array($this, 'apikey'))->name('apikey');
+        $this->slim->get(  '/instructions', array($this, 'instructions'))->name('instructions');
 
         // domains
         $this->slim->get(  '/domains', array($this, 'domains'))->name('domains');
@@ -60,6 +60,8 @@ class App
 
         $this->slim->get(  '/api/domains/:domain/clicks', array($this, 'getClicks'))->name('get_clicks');
         $this->slim->post( '/api/domains/:domain/clicks', array($this, 'registerClicks'))->name('register_clicks');
+        $this->slim->options( '/api/domains/:domain/clicks', array($this, 'preflight'))->name('preflight');
+
     }
 
     protected function registerMiddleWare()
@@ -70,6 +72,8 @@ class App
         $this->slim->add(new SetupMiddleWare);
         $this->slim->add(new SessionCookie);
     }
+
+    public function preflight() {}
 
     public function front() {
         if($this->slim->user) {
@@ -133,9 +137,9 @@ class App
         $this->slim->redirect($this->slim->urlFor('front'));
     }
 
-    public function apikey()
+    public function instructions()
     {
-        $this->slim->render('admin/apikey.html.twig', array(
+        $this->slim->render('admin/instructions.html.twig', array(
                                         'api_key' => $this->slim->user->api_key));
     }
 
@@ -223,22 +227,26 @@ class App
     public function registerClicks()
     {   
         $domain = $this->slim->domain;
+        $requestBody = $this->slim->request->getBody();
+        $postedClicks = json_decode($requestBody);
 
-        $toStore = array();
+        if(json_last_error() || !is_array($postedClicks)) {
+            $this->slim->halt(400);
+        }
+
         $patterns = $domain->replacements
             ? json_decode($domain->replacements, true)
             : array();
 
-        foreach($this->slim->request->post('clicks') as $click) {
+        foreach($postedClicks as $click) {
             // apply patterns
-            $click['page'] = preg_replace(
+            $click->page = preg_replace(
                 array_keys($patterns),
                 array_values($patterns),
-                $click['page']
+                $click->page
             );
-            $toStore[] = $click;
+            $this->slim->storage->storeClick($click, $domain->domain_name);
         }
-        $this->slim->storage->store($toStore, $domain->domain_name);
     }
 
 }

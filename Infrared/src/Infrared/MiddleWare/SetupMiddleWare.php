@@ -21,7 +21,7 @@ class SetupMiddleWare extends Middleware
         $app->view(new \Slim\Views\Twig());
         $app->view->parserOptions = array(
             'charset' => 'utf-8',
-            'cache' => realpath(__DIR__.'/../../../templates/cache'),
+            'cache' => __DIR__.'/../../../templates/cache',
             'auto_reload' => true,
             'strict_variables' => false,
             'autoescape' => true

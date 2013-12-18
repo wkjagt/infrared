@@ -5,17 +5,24 @@
     <div class="row header">
         <h3>Registered domains</h3>
         <div class="col-md-10 col-sm-12 col-xs-12 pull-right">
+            {% if domains|length < 2 %}
             <a href="domains/new" class="btn-flat success pull-right">
                 <span>&#43;</span>
                 NEW DOMAIN
             </a>
+            {% endif %}
         </div>
     </div>
     <div class="table-products">
+        <div class="row filter-block">
+            <h4>
+                <i class="icon-lightbulb"></i>
+                While we're in beta, you'll be able to register a maximum of two domains.
+                We hope to remove this limitation as soon as possible.
+            </h4>
+        </div>
+
         <div class="row">
-
-
-
 
             <table class="table table-hover">
                 <thead>
