@@ -20,6 +20,7 @@
             self.registerListeners();
 
             self.showIcon();
+            $(window).on('resize', function(){self.clear()});
         },
         showIcon : function() {
             chrome.runtime.sendMessage(null, { action : 'show_icon' }, function(response){});            
