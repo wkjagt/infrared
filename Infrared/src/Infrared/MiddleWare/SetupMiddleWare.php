@@ -12,6 +12,7 @@ class SetupMiddleWare extends Middleware
 {
     public function call()
     {
+        $container = $this->app->container;
         $config = $this->app->settings['config'];
         $app = $this->app;
 
@@ -30,12 +31,16 @@ class SetupMiddleWare extends Middleware
         $app->view->setData('request', $app->request);
         $this->app->context = array();
 
-        $this->app->container->singleton('storage', function() use ($config) {
-            $redisClient = new \Predis\Client( (array) $config->storage->redis->parameters );
-            return new RedisStorage($redisClient);            
+        $container->singleton('cache', function() use ($config) {
+            return new \Predis\Client( (array) $config->storage->redis->parameters );
+
         });
 
-        $this->app->container->singleton('mailsender', function() use ($config){
+        $container->singleton('storage', function() use ($container) {
+            return new RedisStorage($container['cache']);            
+        });
+
+        $container->singleton('mailsender', function() use ($config){
             return new MailSender($config);
         });
 
