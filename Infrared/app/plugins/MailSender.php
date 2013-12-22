@@ -1,15 +1,12 @@
 <?php
-namespace Infrared\Service;
-
-use Infrared\Data\BaseEmail;
 
 class MailSender
 {
     protected $mandrill;
 
-    public function __construct($config)
+    public function __construct($apiKey)
     {
-        $this->mandrill = new \Mandrill($config->mandrill->api_key);
+        $this->mandrill = new \Mandrill($apiKey);
     }
 
     public function send(BaseEmail $email)
