@@ -2,8 +2,8 @@
 
 class IndexController extends \Phalcon\Mvc\Controller
 {
-    public function indexAction(){
-
+    public function indexAction()
+    {
         if($this->session->get('auth')) {
             return $this->response->redirect(array('for' => 'domains'));
         }

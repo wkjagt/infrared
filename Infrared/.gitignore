@@ -1,3 +1,4 @@
 vendor
 composer.lock
 templates/cache
+app/compiled-templates

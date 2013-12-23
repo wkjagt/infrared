@@ -10,6 +10,19 @@ class Domain extends \Phalcon\Mvc\Model
 
     public $replacements;
 
+    public function getReplacements()
+    {
+        return $this->replacements
+            ? json_decode($this->replacements, true)
+            : array();
+    }
+
+    public function doReplacements($page)
+    {
+        $patterns = $this->getReplacements();
+        return preg_replace(array_keys($patterns), array_values($patterns), $page);
+    }
+
     public function getSource()
     {
         return "domains";

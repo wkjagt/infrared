@@ -15,6 +15,20 @@ try {
     //Create a DI
     $di = new Phalcon\DI\FactoryDefault();
 
+    $di->set('cache', function(){
+        $params = array(
+            "scheme" => "tcp",
+            "host" => "localhost",
+            "port" => 6379,
+            "database" => 15
+        );
+        return new \Predis\Client($params);
+    });
+
+    $di->set('clickStorage', function() use ($di) {
+        return new ClickStorage($di['cache']);
+    });
+
     $di->set('session', function(){
         $session = new Phalcon\Session\Adapter\Files();
         $session->start();
@@ -24,10 +38,6 @@ try {
     //Set up the flash service
     $di->set('flash', function() {
         return new \Phalcon\Flash\Session();
-    });
-
-    $di->set('flashDirect', function() {
-        return new \Phalcon\Flash\Direct();
     });
 
     $di->set('mail_sender', function(){
@@ -102,5 +112,6 @@ try {
     echo $application->handle()->getContent();
 
 } catch(\Phalcon\Exception $e) {
+     error_log($e->getMessage());
      echo "PhalconException: ", $e->getMessage();
 }

@@ -1,4 +1,4 @@
-a:5:{i:0;s:3755:"<!DOCTYPE html>
+a:5:{i:0;s:3749:"<!DOCTYPE html>
 <html>
 <head>
     <title>Infrared</title>
@@ -51,7 +51,7 @@ a:5:{i:0;s:3755:"<!DOCTYPE html>
 <ul class="nav navbar-nav pull-right hidden-xs">
     <li class="dropdown">
         <a href="#" class="dropdown-toggle hidden-xs hidden-sm" data-toggle="dropdown">
-            <?php echo $this->user->email; ?>
+            <?php echo $user->email; ?>
             <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
