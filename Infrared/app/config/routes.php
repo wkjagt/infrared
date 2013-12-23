@@ -16,6 +16,6 @@ $router->addGet('/instructions', 'instructions::index')->setName('instructions')
 
 $router->addOptions('/api/domains/{domain}/clicks', 'api::preflight');
 $router->addPost('/api/domains/{domain}/clicks', 'api::recordClicks');
-
+$router->addGet('/api/domains/{domain}/clicks', 'api::getClicks');
 
 return $router;

@@ -5,7 +5,7 @@ class ApiController extends \Phalcon\Mvc\Controller
     protected $domain;
 
     public function initialize()
-    {        
+    {
         if($origin = $this->request->getHeader('ORIGIN')) {
             $domainName = parse_url($origin, PHP_URL_HOST);
 
@@ -49,5 +49,28 @@ class ApiController extends \Phalcon\Mvc\Controller
             $click->page = $this->domain->doReplacements($click->page);
             $this->clickStorage->storeClick($click, $this->domain->domain_name);
         }
+    }
+
+    public function getClicksAction()
+    {
+        if(!$page = $this->request->get('page')) {
+            $this->response->setStatusCode(400);
+            return;
+        }
+
+        $domainName = $this->dispatcher->getParam("domain");
+
+        $domain = Domain::query()
+                    ->where("domain_name = :domain_name:")
+                    ->andWhere("user_id = :user_id:")
+                    ->bind(array("domain_name" => $domainName,
+                                 "user_id" => $this->session->get('auth')['user_id']))
+                    ->execute()->getFirst();
+
+        $page = $domain->doReplacements($page);
+        $clicks = $this->clickStorage->retrieve($page, $domainName);
+        $this->response->setHeader('Content-Type', 'application/json');
+
+        echo json_encode($clicks);
     }
 }

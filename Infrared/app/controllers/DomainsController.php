@@ -13,7 +13,8 @@ class DomainsController extends \Phalcon\Mvc\Controller
     public function indexAction()
     {
         $domains = Domain::query()->where("user_id = :user_id:")
-                    ->bind(array("user_id" => 7))->execute();
+                ->bind(array("user_id" => $this->session->get('auth')['user_id']))
+                ->execute();
 
         $this->view->setVar("domains", $domains);
     }
