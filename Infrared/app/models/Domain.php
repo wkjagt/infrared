@@ -10,6 +10,11 @@ class Domain extends \Phalcon\Mvc\Model
 
     public $replacements;
 
+    public function initialize()
+    {
+        $this->belongsTo("user_id", "User", "id");
+    }
+
     public function getReplacements()
     {
         return $this->replacements

@@ -4,44 +4,69 @@ class ApiController extends \Phalcon\Mvc\Controller
 {
     protected $domain;
 
+    protected $user;
+
     public function initialize()
     {
-        if($origin = $this->request->getHeader('ORIGIN')) {
-            $domainName = parse_url($origin, PHP_URL_HOST);
+        $routeName = $this->router->getMatchedRoute()->getName();
 
-            // if($routes[0]->getParam('domain') !== $domainName) {
-            //     $app->halt(400);
-            // }
-            // return;
-
-            // if($cache = $app->cache->hgetall('domains:'.$domainName)) {
-                // $domain = ORM::for_table('domains')->hydrate($cache);
-            // } else {
-                // $domain = Domain::->where('domain_name', $domainName)->find_one();
-                $domain = Domain::query()->where("domain_name = :domain_name:")
-                            ->bind(array("domain_name" => $domainName))
-                            ->execute()->getFirst();
-
-            //     $app->cache->pipeline(function($pipe) use($domain) {
-            //         $pipe->hmset('domains:'.$domain->domain_name, $domain->as_array());
-            //         $pipe->expire('domains:'.$domain->domain_name, 300);
-            //     });
-            // }
-
-            if(!$domain) {
-                $this->response->setStatusCode(403);
-            }
-
-            $this->response->setHeader('Access-Control-Allow-Origin', $origin);
-            $this->response->setHeader('Access-Control-Allow-Headers', 'Content-type');
-            $this->domain = $domain;
+        switch($routeName) {
+            case 'preflight':
+            case 'record_clicks':
+                $this->checkCrossDomain();
+                break;
+            case 'get_clicks':
+                $this->checkApiKey();
         }
+    }
+
+    protected function checkApiKey()
+    {
+        $apiKey = $this->request->get('apikey');
+
+        $query = $this->modelsManager->createQuery(
+            "SELECT * FROM User AS u JOIN Domain AS d WHERE u.api_key = :api_key: AND d.domain_name = :domain_name:");
+
+        $this->user = $query->execute(array(
+            'api_key' => $apiKey,
+            'domain_name' => $this->dispatcher->getParam('domain')
+        ))->getFirst();
+
+        if(!$this->user) {
+            $this->response->setStatusCode(400, '')
+                ->setContent(json_encode(array('error' => 'INVALID_APIKEY')))
+                ->send();
+            exit();
+        }
+    }
+
+    protected function checkCrossDomain($origin)
+    {
+        if($origin = $this->request->getHeader('ORIGIN')) {
+            $this->response->setStatusCode(400)->send();
+            exit;
+        }
+
+        $domainName = parse_url($origin, PHP_URL_HOST);
+        $domain = Domain::query()->where("domain_name = :domain_name:")
+                    ->bind(array("domain_name" => $domainName))
+                    ->execute()->getFirst();
+
+        if(!$domain) {
+            $this->response->setStatusCode(403);
+        }
+
+        $this->response->setHeader('Access-Control-Allow-Origin', $origin);
+        $this->response->setHeader('Access-Control-Allow-Headers', 'Content-type');
+        $this->domain = $domain;
     }
 
     public function preflightAction(){}
 
     public function recordClicksAction()
     {
+        $this->view->disable();
+
         $postedClicks = $this->request->getJsonRawBody();
 
         foreach($postedClicks as $click) {
@@ -57,7 +82,6 @@ class ApiController extends \Phalcon\Mvc\Controller
             $this->response->setStatusCode(400);
             return;
         }
-
         $domainName = $this->dispatcher->getParam("domain");
 
         $domain = Domain::query()

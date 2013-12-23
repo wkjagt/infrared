@@ -14,8 +14,8 @@ $router->addDelete('/domains/{key:\d+}', 'domains::delete')->setName('delete_dom
 
 $router->addGet('/instructions', 'instructions::index')->setName('instructions');
 
-$router->addOptions('/api/domains/{domain}/clicks', 'api::preflight');
-$router->addPost('/api/domains/{domain}/clicks', 'api::recordClicks');
-$router->addGet('/api/domains/{domain}/clicks', 'api::getClicks');
+$router->addOptions('/api/domains/{domain}/clicks', 'api::preflight')->setName('preflight');
+$router->addPost('/api/domains/{domain}/clicks', 'api::recordClicks')->setName('record_clicks');
+$router->addGet('/api/domains/{domain}/clicks', 'api::getClicks')->setName('get_clicks');
 
 return $router;
