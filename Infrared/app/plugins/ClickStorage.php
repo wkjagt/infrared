@@ -4,70 +4,59 @@ use Predis\Client as RedisClient;
 
 class ClickStorage
 {
-    protected $client;
+    protected $conn;
 
-    public function __construct(RedisClient $client)
+    public function __construct($conn)
     {
-        $this->client = $client;
-    }
-
-    public function store(array $data, $site)
-    {
-        foreach($data as $click) {
-            $this->storeClick($click, $site);
-        }
+        $this->conn = $conn;
     }
 
     public function storeClick($data, $domain)
-    {
+    {   
         // #  create unique id for new click
-        $id = sprintf('click:%d', $this->client->incr('click:id'));
+        $id = sprintf('click:%d', phpiredis_command_bs($this->conn, array('INCR', 'click:id')));
 
-        $clickInfo = array( 'x' => $data->click->x,
-                            'y' => $data->click->y,
-                            'elapsed' => $data->elapsed,
-                            'centered' =>  $data->centered);
-
-        // open pipe line
-        $pipe = $this->client->pipeline();
-
-        // save the click itself
-        $pipe->hmset($id, $clickInfo);
-
-        $pipe->expire($id, 7 * 24 * 60 * 60);
-
-        // add id id to page set so we can get clicks for one page
-        $pipe->sadd("clicks_by_page:$domain:".$data->page, $id);
-
-        // add id to page set so we can get clicks for one page
-        $pipe->sadd("clicks_by_site:$domain", $id);
-
-        // keep a list of pages
-        $pipe->sadd("$domain:pages", $data->page);
-
-        $pipe->execute();
+        // pipe all commands
+        $commands = array(
+            array('HMSET', $id,
+                  'x', (string) $data->click->x,
+                  'y', (string) $data->click->y,
+                  'elapsed' , (string) $data->elapsed,
+                  'centered',  $data->centered ? '1' : '0'
+            ),
+            array('EXPIRE', $id, (string) (7 * 24 * 60 * 60)),
+            array('SADD', "clicks_by_page:$domain:".$data->page, $id),
+            array('SADD', "clicks_by_site:$domain", $id),
+            array('SADD', "$domain:pages", $data->page)
+        );
+        phpiredis_multi_command_bs($this->conn, $commands);
     }
 
-    public function retrieve($page, $site)
+    public function retrieve($page, $domain)
     {        
         $intersectKey = md5(microtime());
         $sortKey = md5(microtime());
-        $site = urldecode($site);
+        $domain = urldecode($domain);
 
-        // store a temporary sorted set, which is a copy of clicks_by_date
-        // intersected with the appropriate clicks_by_page:x sets.
-        $this->client->zinterstore($intersectKey, 2,
-            "clicks_by_page:$site:$page",
-            "clicks_by_site:$site"
-        );
+        phpiredis_command_bs($this->conn, array(
+            'ZINTERSTORE', $intersectKey, '2',
+            "clicks_by_page:$domain:$page",
+            "clicks_by_site:$domain"
+        ));
 
-        $ids = $this->client->sort($intersectKey, array('by' => '*->elapsed'));
+        $ids = phpiredis_command_bs($this->conn, array('SORT', $intersectKey, 'BY', '*->elapsed'));
 
         // apparently this is fine http://blog.jmoz.co.uk/python-redis-py-pipeline
         $clicks = array();
         foreach($ids as $id) {
-            if($click = $this->client->hgetall($id)) {
-                $clicks[] = $this->client->hgetall($id);
+            if($click = phpiredis_command_bs($this->conn, array('HGETALL', $id))) {
+
+                $clicks[] = array(
+                    array_shift($click) => array_shift($click),
+                    array_shift($click) => array_shift($click),
+                    array_shift($click) => array_shift($click),
+                    array_shift($click) => array_shift($click),                    
+                );
             }
         }
         return $clicks;

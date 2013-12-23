@@ -16,13 +16,7 @@ try {
     $di = new Phalcon\DI\FactoryDefault();
 
     $di->set('cache', function(){
-        $params = array(
-            "scheme" => "tcp",
-            "host" => "localhost",
-            "port" => 6379,
-            "database" => 15
-        );
-        return new \Predis\Client($params);
+        return phpiredis_connect('127.0.0.1', 6379);
     });
 
     $di->set('clickStorage', function() use ($di) {
@@ -45,13 +39,13 @@ try {
     });
 
     $di->set('db', function(){
-            return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-                "host" => "localhost",
-                "username" => "root",
-                "password" => "",
-                "dbname" => "infrared"
-            ));
-        });
+        return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+            "host" => "localhost",
+            "username" => "root",
+            "password" => "",
+            "dbname" => "infrared"
+        ));
+    });
 
     //Register Volt as a service
     $di->set('voltService', function($view, $di) {

@@ -40,10 +40,10 @@ class ApiController extends \Phalcon\Mvc\Controller
         }
     }
 
-    protected function checkCrossDomain($origin)
+    protected function checkCrossDomain()
     {
-        if($origin = $this->request->getHeader('ORIGIN')) {
-            $this->response->setStatusCode(400)->send();
+        if(!$origin = $this->request->getHeader('ORIGIN')) {
+            $this->response->setStatusCode(400, '')->send();
             exit;
         }
 
