@@ -48,9 +48,21 @@ class ApiController extends \Phalcon\Mvc\Controller
         }
 
         $domainName = parse_url($origin, PHP_URL_HOST);
-        $domain = Domain::query()->where("domain_name = :domain_name:")
-                    ->bind(array("domain_name" => $domainName))
-                    ->execute()->getFirst();
+
+        if($cache = phpiredis_command_bs($this->cache, array('GET', "domains:$domainName"))) {
+            $domain = new Domain;
+            $domain->unserialize($cache);
+            echo "from cache";
+        } else {
+            $domain = Domain::query()->where("domain_name = :domain_name:")
+                        ->bind(array("domain_name" => $domainName))
+                        ->execute()->getFirst();
+
+            phpiredis_multi_command_bs($this->cache, array(
+                array('SET', "domains:$domainName", $domain->serialize()),
+                array('EXPIRE', "domains:$domainName", 5 * 60)
+            ));            
+        }
 
         if(!$domain) {
             $this->response->setStatusCode(403);
