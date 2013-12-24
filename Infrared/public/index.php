@@ -3,20 +3,22 @@
 require __DIR__.'/../vendor/autoload.php';
 
 try {
+    $config = require '../app/config/config.php';
+
     //Register an autoloader
     $loader = new \Phalcon\Loader();
-    $loader->registerDirs(array(
+    $loader->registerDirs([
         '../app/controllers/',
         '../app/models/',
         '../app/plugins/',
         '../app/emails/',
-    ))->register();
+    ])->register();
 
     //Create a DI
     $di = new Phalcon\DI\FactoryDefault();
 
-    $di->set('cache', function(){
-        return phpiredis_connect('127.0.0.1', 6379);
+    $di->set('cache', function() use ($config) {
+        return phpiredis_connect($config['redis']['host'], $config['redis']['port']);
     });
 
     $di->set('clickStorage', function() use ($di) {
@@ -34,17 +36,17 @@ try {
         return new \Phalcon\Flash\Session();
     });
 
-    $di->set('mail_sender', function(){
-        return new MailSender('-TwREiIz1HQrMkeY2cvwcA'  );
+    $di->set('mail_sender', function() use ($config) {
+        return new MailSender($config['mandrill']['api_key']);
     });
 
-    $di->set('db', function(){
-        return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-            "host" => "localhost",
-            "username" => "root",
-            "password" => "",
-            "dbname" => "infrared"
-        ));
+    $di->set('db', function() use ($config){
+        return new \Phalcon\Db\Adapter\Pdo\Mysql([
+            "host" => $config['db']['host'],
+            "username" => $config['db']['user'],
+            "password" => $config['db']['pass'],
+            "dbname" => $config['db']['db_name']
+        ]);
     });
 
     //Register Volt as a service
@@ -52,11 +54,11 @@ try {
 
         $volt = new Phalcon\Mvc\View\Engine\Volt($view, $di);
 
-        $volt->setOptions(array(
+        $volt->setOptions([
             "compiledPath" => "../app/compiled-templates/",
             "compiledExtension" => ".compiled",
             "compileAlways" => true
-        ));
+        ]);
         return $volt;
     });
 
@@ -65,9 +67,9 @@ try {
         $view = new \Phalcon\Mvc\View();
         $view->setViewsDir('../app/views/');
 
-        $view->registerEngines(array(
+        $view->registerEngines([
             ".volt" => 'voltService'
-        ));
+        ]);
 
         return $view;
     });

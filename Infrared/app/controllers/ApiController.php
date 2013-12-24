@@ -52,7 +52,6 @@ class ApiController extends \Phalcon\Mvc\Controller
         if($cache = phpiredis_command_bs($this->cache, array('GET', "domains:$domainName"))) {
             $domain = new Domain;
             $domain->unserialize($cache);
-            echo "from cache";
         } else {
             $domain = Domain::query()->where("domain_name = :domain_name:")
                         ->bind(array("domain_name" => $domainName))
