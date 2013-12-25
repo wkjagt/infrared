@@ -76,7 +76,7 @@ var Infrared = {
             data = Infrared.storage.flush();
 
         x.open("POST", url, true);
-        x.setRequestHeader('Content-type', 'application/json');
+        x.setRequestHeader('Content-Type', 'application/json');
         x.send(data);
     },
     reset : function( ) {

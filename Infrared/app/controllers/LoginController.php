@@ -20,7 +20,6 @@ class LoginController extends \Phalcon\Mvc\Controller
             $user = new User;
             $user->email = $email;
             $user->api_key = bin2hex(openssl_random_pseudo_bytes(40));
-            $this->flash->success();
             $this->session->set('email_sent', 'We\'ve emailed you a link to your new account!');
         } else {
             $this->session->set('email_sent', 'We\'ve emailed you a link to your account!');
