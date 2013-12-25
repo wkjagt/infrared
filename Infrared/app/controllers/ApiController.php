@@ -57,14 +57,16 @@ class ApiController extends \Phalcon\Mvc\Controller
                         ->bind(array("domain_name" => $domainName))
                         ->execute()->getFirst();
 
-            phpiredis_multi_command_bs($this->cache, array(
-                array('SET', "domains:$domainName", $domain->serialize()),
-                array('EXPIRE', "domains:$domainName", 5 * 60)
-            ));            
+            if($domain) {
+                phpiredis_multi_command_bs($this->cache, array(
+                    array('SET', "domains:$domainName", $domain->serialize()),
+                    array('EXPIRE', "domains:$domainName", 5 * 60)
+                ));
+            }
         }
 
         if(!$domain) {
-            $this->response->setStatusCode(403);
+            $this->response->setStatusCode(403, '');
         }
 
         $this->response->setHeader('Access-Control-Allow-Origin', $origin);
