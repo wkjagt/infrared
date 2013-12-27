@@ -1,0 +1,4 @@
+vendor
+composer.lock
+Infrared/templates/cache
+Infrared/app/config/config.php

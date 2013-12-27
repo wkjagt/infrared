@@ -1,4 +1,4 @@
-// "use strict";
+"use strict";
 
 var Infrared = {
     pluginGlobals : {},
@@ -38,6 +38,7 @@ var Infrared = {
         this.pluginGlobals = {
             max_storage : 1,
             server_endpoint : 'http://dev.infraredapp.com',
+            // server_endpoint : 'http://useinfrared.com',
             startTime : new Date().getTime(),
             totalClicks : 0,
             centered : options.centered || false,
