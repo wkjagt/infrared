@@ -8,6 +8,7 @@ class ApiController extends \Phalcon\Mvc\Controller
 
     public function initialize()
     {
+        $this->view->disable();
         $routeName = $this->router->getMatchedRoute()->getName();
 
         switch($routeName) {
@@ -78,8 +79,6 @@ class ApiController extends \Phalcon\Mvc\Controller
 
     public function recordClicksAction()
     {
-        $this->view->disable();
-
         $postedClicks = $this->request->getJsonRawBody();
 
         foreach($postedClicks as $click) {
