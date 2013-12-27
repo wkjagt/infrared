@@ -3,6 +3,7 @@
 function onMsg(msg, sender, sendResponse) {
     switch(msg.action) {
         case 'get_data':
+            // var server = 'http://useinfrared.com',
             var server = 'http://dev.infraredapp.com',
                 path = '/api/domains/' + msg.domain + '/clicks';
 
