@@ -25,7 +25,7 @@ class ApiController extends \Phalcon\Mvc\Controller
         $apiKey = $this->request->get('apikey');
 
         $query = $this->modelsManager->createQuery(
-            "SELECT * FROM User AS u JOIN Domain AS d WHERE u.api_key = :api_key: AND d.domain_name = :domain_name:");
+            "SELECT u.* FROM User AS u JOIN Domain AS d WHERE u.api_key = :api_key: AND d.domain_name = :domain_name:");
 
         $this->user = $query->execute(array(
             'api_key' => $apiKey,
@@ -91,7 +91,7 @@ class ApiController extends \Phalcon\Mvc\Controller
 
     public function getClicksAction()
     {
-        if(!$page = $this->request->get('page')) {
+       if(!$page = $this->request->get('page')) {
             $this->response->setStatusCode(400);
             return;
         }
@@ -101,7 +101,7 @@ class ApiController extends \Phalcon\Mvc\Controller
                     ->where("domain_name = :domain_name:")
                     ->andWhere("user_id = :user_id:")
                     ->bind(array("domain_name" => $domainName,
-                                 "user_id" => $this->session->get('auth')['user_id']))
+                                 "user_id" => $this->user->id))
                     ->execute()->getFirst();
 
         $page = $domain->doReplacements($page);
