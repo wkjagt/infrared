@@ -67,6 +67,8 @@ class LoginController extends \Phalcon\Mvc\Controller
 
         if($user) {
             $this->session->set('auth', array('user_id' => $user->id)); // 1 year
+            $user->session_key = '';
+            $user->save();
             return $this->response->redirect(array('for' => 'domains'));
         }
         $this->flash->error('There seems to be something wrong with that link');
