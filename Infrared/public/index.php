@@ -57,7 +57,7 @@ try {
         $volt->setOptions([
             "compiledPath" => "../app/compiled-templates/",
             "compiledExtension" => ".compiled",
-            "compileAlways" => true
+            // "compileAlways" => true
         ]);
         return $volt;
     });
