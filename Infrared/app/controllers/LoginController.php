@@ -16,7 +16,7 @@ class LoginController extends \Phalcon\Mvc\Controller
         $loginTrackString = sprintf('loginsfromip:%s', $ip);
         $email = $this->request->getPost("email");
 
-        $attemps = phpiredis_command_bs($cache, array('GET', $loginTrackString));
+        $attempts = phpiredis_command_bs($cache, array('GET', $loginTrackString));
 
         if($attempts >= self::maxAttempts) {
             return $this->response->redirect(array('for' => 'front'));

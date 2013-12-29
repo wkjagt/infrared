@@ -24,4 +24,15 @@ class User extends \Phalcon\Mvc\Model
     {
         return "users";
     }
+
+    public function beforeValidationOnCreate()
+    {
+        $this->created = date('Y-m-d H:i:s');
+        $this->modified = date('Y-m-d H:i:s');
+    }
+
+    public function beforeValidationOnUpdate()
+    {
+        $this->modified = date('Y-m-d H:i:s');
+    }
 }

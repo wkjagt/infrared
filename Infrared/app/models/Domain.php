@@ -58,4 +58,14 @@ class Domain extends \Phalcon\Mvc\Model
         }
     }
 
+    public function beforeValidationOnCreate()
+    {
+        $this->created = date('Y-m-d H:i:s');
+        $this->modified = date('Y-m-d H:i:s');
+    }
+
+    public function beforeValidationOnUpdate()
+    {
+        $this->modified = date('Y-m-d H:i:s');
+    }
 }
