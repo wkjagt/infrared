@@ -1,4 +1,4 @@
-
+var pageActionState = 'stopped';
 
 function onMsg(msg, sender, sendResponse) {
     switch(msg.action) {
@@ -32,4 +32,24 @@ function onMsg(msg, sender, sendResponse) {
 
 };
 
+function onPageActionClick(tab) {
+
+    if (pageActionState == 'stopped' ){
+        pageActionState = 'playing';
+        var action = 'play', icon = 'stop';
+    } else {
+        pageActionState = 'stopped';
+        var action = 'stop', icon = 'play';
+    }
+    chrome.pageAction.setIcon({
+        tabId : tab.id,
+        path : {
+            "19" : "img/"+icon+"-icon-black-19.png",
+            "38" : "img/"+icon+"-icon-black-38.png"
+        }
+    });
+    chrome.tabs.sendMessage(tab.id, { action : action });
+}
+
 chrome.runtime.onMessage.addListener(onMsg)
+chrome.pageAction.onClicked.addListener(onPageActionClick);
