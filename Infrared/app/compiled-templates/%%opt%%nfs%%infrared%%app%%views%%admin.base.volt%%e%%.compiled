@@ -1,10 +1,11 @@
-a:5:{i:0;s:3755:"<!DOCTYPE html>
+a:5:{i:0;s:3810:"<!DOCTYPE html>
 <html>
 <head>
     <title>Infrared</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <link rel="icon" type="image/png" href="/favicon.png">
+
     <!-- bootstrap -->
     <link href="/assets/admin/css/bootstrap/bootstrap.css" rel="stylesheet" />
     <link href="/assets/admin/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
@@ -171,6 +172,16 @@ a:5:{i:0;s:3755:"<!DOCTYPE html>
             });
         });
     </script>
-    ";s:7:"scripts";N;i:2;s:16:"
+    ";s:7:"scripts";N;i:2;s:468:"
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-46709630-1', 'useinfrared.com');
+      ga('send', 'pageview');
+
+    </script>
 </body>
 </html>";}

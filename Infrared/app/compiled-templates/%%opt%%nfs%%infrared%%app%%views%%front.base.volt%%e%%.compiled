@@ -1,9 +1,10 @@
-a:7:{i:0;s:1352:"<!DOCTYPE html>
+a:7:{i:0;s:1411:"<!DOCTYPE html>
 <html>
   <head>
     <title>Infrared</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
     <!-- Bootstrap -->
     <link href="/assets/landing/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <!-- Font Awesome -->
@@ -33,7 +34,7 @@ a:7:{i:0;s:1352:"<!DOCTYPE html>
                     <a href="" title="infrared">infrared</a>
                 </div><!--/12-->
             </header>
-            ";s:4:"file";s:28:"../app/views/front.base.volt";s:4:"line";i:36;}}i:1;s:26:"
+            ";s:4:"file";s:28:"../app/views/front.base.volt";s:4:"line";i:37;}}i:1;s:26:"
             
             ";s:7:"content";N;i:2;s:14:"
 
@@ -43,7 +44,7 @@ a:7:{i:0;s:1352:"<!DOCTYPE html>
                     <small><i>&copy;2014 Infrared. All rights reserved.</i></small>
                 </div><!--/12-->
             </footer>
-            ";s:4:"file";s:28:"../app/views/front.base.volt";s:4:"line";i:52;}}i:3;s:1020:"
+            ";s:4:"file";s:28:"../app/views/front.base.volt";s:4:"line";i:53;}}i:3;s:1020:"
 
         </div><!--/row-->
     </div><!--/container-->
