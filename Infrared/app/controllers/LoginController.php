@@ -37,9 +37,11 @@ class LoginController extends \Phalcon\Mvc\Controller
             $user->email = $email;
             $user->api_key = bin2hex(openssl_random_pseudo_bytes(40));
             $this->session->set('email_sent', 'We\'ve emailed you a link to your new account!');
+            $mail = new SignupEmail($email, sprintf('%s://%s%s', $scheme, $host, $path));
         } else {
             // login
             $this->session->set('email_sent', 'We\'ve emailed you a link to your account!');
+            $mail = new LoginEmail($email, sprintf('%s://%s%s', $scheme, $host, $path));
         }
         $user->session_key = $sessionKey;
         $user->save();
@@ -48,7 +50,6 @@ class LoginController extends \Phalcon\Mvc\Controller
         phpiredis_multi_command_bs($cache, array( array('INCR', $loginTrackString),
                                                   array('EXPIRE', $loginTrackString, 300) ));
 
-        $mail = new LoginEmail($email, sprintf('%s://%s%s', $scheme, $host, $path));
         $this->mail_sender->send($mail);
 
         return $this->response->redirect(array('for' => 'front'));
