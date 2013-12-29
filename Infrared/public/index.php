@@ -90,11 +90,8 @@ try {
         //Obtain the standard eventsManager from the DI
         $eventsManager = $di->getShared('eventsManager');
 
-        //Instantiate the Security plugin
-        $security = new Security($di);
-
-        //Listen for events produced in the dispatcher using the Security plugin
-        $eventsManager->attach('dispatch', $security);
+        $eventsManager->attach('dispatch', new Security($di));
+        $eventsManager->attach('dispatch', new ExceptionHandler($di));
 
         $dispatcher = new Phalcon\Mvc\Dispatcher();
 
