@@ -1,9 +1,13 @@
 {
   "name": "Infrared",
   "manifest_version": 2,
-  "version": "1.0",
+  "version": "0.0.0.1",
   "options_page" : "options.html",
-
+  "icons" : {
+    "16" : "img/logo-16.png",
+    "48" : "img/logo-48.png",
+    "128" : "img/logo-128.png"
+  },
   "page_action": {
     "default_title": "Infrared",      // optional; shown in tooltip
     // "default_popup": "popup.html",       // optional
