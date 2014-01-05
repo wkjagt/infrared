@@ -61,6 +61,8 @@ class ClickStorage
         // apparently this is fine http://blog.jmoz.co.uk/python-redis-py-pipeline
         $clicks = array();
         foreach($ids as $id) {
+            // we need to check if the click still exists because it could
+            // possibly already have expired
             if($click = phpiredis_command_bs($this->conn, array('HGETALL', $id))) {
 
                 $clicks[] = array(
