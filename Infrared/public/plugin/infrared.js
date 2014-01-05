@@ -32,15 +32,14 @@ var Infrared = {
     },
     init : function( options ) {
         if (!window.XMLHttpRequest || !JSON || !localStorage) {
-            // we don't support this browser
+            // we need these objects to continue
             return;
         }
         this.pluginGlobals = {
-            max_storage : 1,
+            max_storage : 5, // the number of clicks to store before sending
             server_endpoint : 'http://dev.infraredapp.com',
             // server_endpoint : 'http://useinfrared.com',
             startTime : new Date().getTime(),
-            totalClicks : 0,
             centered : options.centered || false,
         };
         this.storage.init();
@@ -49,8 +48,6 @@ var Infrared = {
         document.body.onmousedown = this.report;
     },
     report : function( event ) {
-
-        Infrared.pluginGlobals.totalClicks++;
 
         var now = new Date().getTime()
             ,full = false
@@ -76,15 +73,12 @@ var Infrared = {
             x = new XMLHttpRequest(),
             data = Infrared.storage.flush();
 
+        // no onreadystatechange callback because we don't care about the response
         x.open("POST", url, true);
         x.setRequestHeader('Content-type', 'application/json');
         x.send(data);
     },
     reset : function( ) {
         pluginGlobals.startTime = new Date().getTime();
-        pluginGlobals.totalClicks = 0;
-    },
-    setpage: function( page ) {
-        pluginGlobals.page = page;
     }
 }
