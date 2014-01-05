@@ -53,6 +53,11 @@ var Infrared = {
             ,full = false
             ,elapsed = now - Infrared.pluginGlobals.startTime;
 
+        // stop recording after 1 minute
+        if(elapsed > 60000) {
+            return;
+        }
+
         var entry = {
             click: {
                 x : Infrared.pluginGlobals.centered ? (event.pageX - (document.body.clientWidth/2)) : event.pageX,
