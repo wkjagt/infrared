@@ -26,25 +26,18 @@ class ClickStorage
             ),
             array('EXPIRE', $id, (string) (7 * 24 * 60 * 60)),
             array('SADD', "clicks_by_page:$domain:".$data->page, $id),
-            array('SADD', "clicks_by_site:$domain", $id),
-            array('SADD', "$domain:pages", $data->page)
         );
         phpiredis_multi_command_bs($this->conn, $commands);
     }
 
     public function retrieve($page, $domain)
     {        
-        $intersectKey = md5(microtime());
-        $sortKey = md5(microtime());
         $domain = urldecode($domain);
-
-        phpiredis_command_bs($this->conn, array(
-            'ZINTERSTORE', $intersectKey, '2',
+        $ids = phpiredis_command_bs($this->conn, array(
+            'SORT',
             "clicks_by_page:$domain:$page",
-            "clicks_by_site:$domain"
+            'BY', '*->elapsed'
         ));
-
-        $ids = phpiredis_command_bs($this->conn, array('SORT', $intersectKey, 'BY', '*->elapsed'));
 
         // apparently this is fine http://blog.jmoz.co.uk/python-redis-py-pipeline
         $clicks = array();
