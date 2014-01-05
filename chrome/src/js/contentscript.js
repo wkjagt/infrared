@@ -97,6 +97,9 @@
                 if(++i < clicks.length && self.state == 'playing') {
                     var delay = clicks[i]['elapsed'] - click['elapsed'];
                     this.timer = setTimeout(iterator, delay);
+                } else {
+                    // clear the heatmap 10 seconds after the last click
+                    setTimeout(function(){ self.clear(); }, 10000);
                 }
             };
 
