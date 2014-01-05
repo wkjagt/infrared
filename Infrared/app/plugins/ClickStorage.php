@@ -15,6 +15,7 @@ class ClickStorage
     {   
         // #  create unique id for new click
         $id = sprintf('click:%d', phpiredis_command_bs($this->conn, array('INCR', 'click:id')));
+        $ttl = (string) (7 * 24 * 60 * 60);
 
         // pipe all commands
         $commands = array(
@@ -24,20 +25,38 @@ class ClickStorage
                   'elapsed' , (string) $data->elapsed,
                   'centered',  $data->centered ? '1' : '0'
             ),
-            array('EXPIRE', $id, (string) (7 * 24 * 60 * 60)),
-            array('SADD', "clicks_by_page:$domain:".$data->page, $id),
+
+            // keys expire "automatically" but we expire elements from sets
+            // using sorted sets that are sorted by timestamp
+            array('EXPIRE', $id, $ttl),
+
+            // sort by time() so we can delete older items more easily
+            array('ZADD', "clicks_by_page:$domain:".$data->page, time(), $id),
         );
         phpiredis_multi_command_bs($this->conn, $commands);
+
+        // remove all members from the sorted set of clicks for this page
+        // that are older that $ttl for which the hashes are also expiring
+        $this->expire("clicks_by_page:$domain:".$data->page, $ttl);
+    }
+
+    protected function expire($key, $ttl)
+    {
+        // the timestamp in the past before which all members should be deleted
+        $expire = (string) (time() - $ttl);
+
+        phpiredis_command_bs($this->conn, array(
+            'ZREMRANGEBYSCORE',
+            $key,
+            '-inf', // lowest score : as early is possible
+            $expire // highest score
+        ));
     }
 
     public function retrieve($page, $domain)
     {        
-        $domain = urldecode($domain);
-        $ids = phpiredis_command_bs($this->conn, array(
-            'SORT',
-            "clicks_by_page:$domain:$page",
-            'BY', '*->elapsed'
-        ));
+        $key = sprintf("clicks_by_page:%s:%s", urldecode($domain), $page);
+        $ids = phpiredis_command_bs($this->conn, array('SORT', $key, 'BY', '*->elapsed'));
 
         // apparently this is fine http://blog.jmoz.co.uk/python-redis-py-pipeline
         $clicks = array();
