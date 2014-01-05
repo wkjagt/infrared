@@ -111,6 +111,7 @@
             
             this.heatmap.clear();
             this.canvas.hide();
+            chrome.runtime.sendMessage(null, { action : 'show_play_icon' }, function(response){});
         }
     };
 

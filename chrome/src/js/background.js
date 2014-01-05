@@ -28,6 +28,15 @@ function onMsg(msg, sender, sendResponse) {
         case 'show_icon':
             chrome.pageAction.show(sender.tab.id);
             sendResponse({});
+            break;
+        case 'show_play_icon':
+            chrome.pageAction.setIcon({
+                tabId : sender.tab.id,
+                path : {
+                    "19" : "img/play-icon-black-19.png",
+                    "38" : "img/play-icon-black-38.png"
+                }
+            });
     }
 
 };
