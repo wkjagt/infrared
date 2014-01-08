@@ -35,10 +35,18 @@ var Infrared = {
             // we need these objects to continue
             return;
         }
+
+        var scripts = document.getElementsByTagName('script');
+
+        // start at the end more chance to find the script there
+        for (var i = document.getElementsByTagName('script').length - 1; i >= 0; i--) {
+            var match = scripts[i].src.match(/(.*)\/plugin\/infrared.js/);
+            if(match) break;
+        };
+
         this.pluginGlobals = {
             max_storage : 5, // the number of clicks to store before sending
-            server_endpoint : 'http://dev.infraredapp.com',
-            // server_endpoint : 'http://useinfrared.com',
+            server_endpoint : match[1],
             startTime : new Date().getTime(),
             centered : options.centered || false,
         };
