@@ -7,7 +7,7 @@
 
     var infrared = {
 
-        canvas: $('<canvas id="infrared-canvas">'),
+        canvas: $('<div id="infrared-canvas-wrapper"><div id="infrared-canvas-background"></div><canvas id="infrared-canvas"></div>'),
         heatmap: null,
         timer: null,
         state: 'stopped',
@@ -27,7 +27,7 @@
         },
         setupCanvas : function() {
             $('body').append(this.canvas);
-            this.heatmap = createWebGLHeatmap({canvas: this.canvas[0]});
+            this.heatmap = createWebGLHeatmap({canvas: this.canvas.find('canvas')[0]});
             this.canvas.hide();
         },
         startRefreshLoop : function() {
@@ -106,12 +106,12 @@
             setTimeout(iterator, clicks[i]['elapsed']);
         },
         clear : function() {
-            clearTimeout(this.timer);
-            this.timer = 0;
+            // clearTimeout(this.timer);
+            // this.timer = 0;
             
-            this.heatmap.clear();
-            this.canvas.hide();
-            chrome.runtime.sendMessage(null, { action : 'show_play_icon' }, function(response){});
+            // this.heatmap.clear();
+            // this.canvas.hide();
+            // chrome.runtime.sendMessage(null, { action : 'show_play_icon' }, function(response){});
         }
     };
 
