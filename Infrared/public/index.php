@@ -101,6 +101,11 @@ try {
         return $dispatcher;
     });
 
+    $di->set('url_parser', function(){
+        $pslManager = new Pdp\PublicSuffixListManager();
+        return new Pdp\Parser($pslManager->getList());
+    });
+
     $application = new \Phalcon\Mvc\Application($di);
     echo $application->handle()->getContent();
 
