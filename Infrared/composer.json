@@ -1,6 +1,7 @@
 {
     "require": {
-        "mandrill/mandrill": "1.0.50"
+        "mandrill/mandrill": "1.0.50",
+        "jeremykendall/php-domain-parser": "0.0.*"
     },
     "autoload": {
         "psr-0": { "Infrared": "src/" }
