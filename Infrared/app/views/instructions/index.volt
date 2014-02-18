@@ -39,8 +39,9 @@
 
         <h3>Install our chrome extension</h3>
         <p>
-            To see an animated heatmap of your user's click behaviour, you need to install our
-            Chrome extension. Once the extension is installed, go to the options for the extension
+            To see an animated heatmap of your user's click behaviour, you need to install
+            <a target="_blank" href="https://chrome.google.com/webstore/detail/infrared/micfbdajidndejakijomaiipgjbdjehj">our
+            Chrome extension</a>. Once the extension is installed, go to the options for the extension
             and enter your API key: <em>{{ user.api_key }}</em>.
             Go to the page on your site for which you want to see a heatmap, and click the
             Infrared logo that's added to the right of your browser's address bar to start the animation.
