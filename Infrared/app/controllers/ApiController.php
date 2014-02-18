@@ -48,7 +48,8 @@ class ApiController extends \Phalcon\Mvc\Controller
             exit;
         }
 
-        $domainName = parse_url($origin, PHP_URL_HOST);
+        $host = parse_url($origin, PHP_URL_HOST);
+        $domainName = $this->url_parser->getRegisterableDomain($host);
 
         if($cache = phpiredis_command_bs($this->cache, array('GET', "domains:$domainName"))) {
             $domain = new Domain;
