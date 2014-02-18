@@ -94,8 +94,8 @@
             <i class="hicon icon-info"></i>                            
             <h2>How does it work?</h2>
             <p>
-                Easy. Create an account and tell us what domain your site is on.
-                We'll give you a javascript snippet in your site (we'll give it to you).
+                Easy. Create an account and tell us the domain of your site or application.
+                You paste a JavaScript snippet we'll give you onto your site.
                 And start watching the first clicks come in from our chrome extension.
             </p>
         </div><!--feature-box-->
