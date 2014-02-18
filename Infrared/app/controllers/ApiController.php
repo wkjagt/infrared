@@ -27,10 +27,13 @@ class ApiController extends \Phalcon\Mvc\Controller
 
         $query = $this->modelsManager->createQuery(
             "SELECT u.* FROM User AS u JOIN Domain AS d WHERE u.api_key = :api_key: AND d.domain_name = :domain_name:");
-
+        
+        $host = $this->dispatcher->getParam('domain');
+        $domainName = $this->url_parser->getRegisterableDomain($host);
+        
         $this->user = $query->execute(array(
             'api_key' => $apiKey,
-            'domain_name' => $this->dispatcher->getParam('domain')
+            'domain_name' => $domainName
         ))->getFirst();
 
         if(!$this->user) {
@@ -95,7 +98,9 @@ class ApiController extends \Phalcon\Mvc\Controller
             $this->response->setStatusCode(400);
             return;
         }
-        $domainName = $this->dispatcher->getParam("domain");
+
+        $host = $this->dispatcher->getParam("domain");
+        $domainName = $this->url_parser->getRegisterableDomain($host);
 
         $domain = Domain::query()
                     ->where("domain_name = :domain_name:")
