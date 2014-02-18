@@ -8,16 +8,18 @@
     <form method="post" action="">
         <div class="form-wrapper">
             <div class="row">
-                <div class="field-box col-xs-6">
-                    <label>Domain name:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">http://</span>
-                        <input name="domain_name" placeholder="www.example.com" type="text" class="form-control">
-                    </div>                            
+                <div class="col-xs-6">
+                    <p>
+                        Please provide your registered domain, not the url of your website. If your website
+                        is <i>www.example.com</i>, then put <i>example.com</i>
+                    </p>
                 </div>
             </div>
             <div class="row">
-                <div class="input-group col-xs-6">
+                <div class="col-xs-6">
+                    <input name="domain_name" placeholder="example.com" type="text" class="form-control ">
+                </div>
+                <div class="input-group">
                     <input type="submit" class="btn-flat" value="register">
                 </div>
             </div>
