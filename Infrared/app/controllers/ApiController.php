@@ -44,6 +44,8 @@ class ApiController extends \Phalcon\Mvc\Controller
                 ->send();
             exit();
         }
+        $this->response->setHeader('Access-Control-Allow-Origin', '*');
+        $this->response->setHeader('Access-Control-Allow-Headers', 'Content-type');
     }
 
     protected function checkCrossDomain()

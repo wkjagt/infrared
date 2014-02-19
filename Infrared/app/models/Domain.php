@@ -24,7 +24,7 @@ class Domain extends \Phalcon\Mvc\Model
 
     public function doReplacements($page)
     {
-        $patterns = $this->getReplacements();
+        $patterns = $this->getReplacements() ?: array();
         return preg_replace(array_keys($patterns), array_values($patterns), $page);
     }
 
