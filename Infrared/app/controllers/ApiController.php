@@ -4,6 +4,8 @@ class ApiController extends \Phalcon\Mvc\Controller
 {
     protected $domain;
 
+    protected $host;
+
     protected $user;
 
     public function initialize()
@@ -51,8 +53,8 @@ class ApiController extends \Phalcon\Mvc\Controller
             exit;
         }
 
-        $host = parse_url($origin, PHP_URL_HOST);
-        $domainName = $this->url_parser->getRegisterableDomain($host);
+        $this->host = parse_url($origin, PHP_URL_HOST);
+        $domainName = $this->url_parser->getRegisterableDomain($this->host);
 
         if($cache = phpiredis_command_bs($this->cache, array('GET', "domains:$domainName"))) {
             $domain = new Domain;
@@ -84,11 +86,10 @@ class ApiController extends \Phalcon\Mvc\Controller
     public function recordClicksAction()
     {
         $postedClicks = $this->request->getJsonRawBody();
-
         foreach($postedClicks as $click) {
 
             $click->page = $this->domain->doReplacements($click->page);
-            $this->clickStorage->storeClick($click, $this->domain->domain_name);
+            $this->clickStorage->storeClick($click, $this->host);
         }
     }
 
@@ -110,7 +111,7 @@ class ApiController extends \Phalcon\Mvc\Controller
                     ->execute()->getFirst();
 
         $page = $domain->doReplacements($page);
-        $clicks = $this->clickStorage->retrieve($page, $domainName);
+        $clicks = $this->clickStorage->retrieve($page, $host);
         $this->response->setHeader('Content-Type', 'application/json');
 
         echo json_encode($clicks);
