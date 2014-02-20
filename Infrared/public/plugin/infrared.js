@@ -45,7 +45,7 @@ var Infrared = {
         };
 
         this.pluginGlobals = {
-            max_storage : 5, // the number of clicks to store before sending
+            max_storage : 2, // the number of clicks to store before sending
             server_endpoint : match[1],
             startTime : new Date().getTime(),
             centered : options.centered || false,
