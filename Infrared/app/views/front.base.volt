@@ -47,7 +47,7 @@
                         <a href="#"><i class="icon-google-plus-sign"></i></a>
                         <a href="#"><i class="icon-pinterest-sign"></i></a>
                     </div>
- #}                    <small><i>&copy;2014 Infrared. All rights reserved.</i></small>
+ #}                    <small><i>2014 Infrared. Built with love in Montreal by <a target="_blank" href="https://twitter.com/wkjagt">@wkjagt</a></i></small>
                 </div><!--/12-->
             </footer>
             {% endblock %}
