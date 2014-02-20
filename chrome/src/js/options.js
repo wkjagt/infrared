@@ -5,9 +5,7 @@ function save_options(e) {
     localStorage['phonehome'] = $('input#phonehome').val();
 
     // Update status to let user know options were saved.
-    var status = $('#save');
-    // debugger
-    status.html('Saved!');
+    $('#save').html('Saved!');
 }
 
 // Restores select box state to saved value from localStorage.
@@ -15,6 +13,8 @@ $(window).ready(function(){
     if(localStorage['apikey']) {
         $('input#apikey').val(localStorage['apikey']);        
     }
-    $('input#phonehome').val(localStorage['phonehome']);    
+    if(localStorage['phonehome']) {
+        $('input#phonehome').val(localStorage['phonehome']);            
+    }
 });
 $('#save').on('click', save_options);
