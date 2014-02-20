@@ -105,13 +105,14 @@
 
             setTimeout(iterator, clicks[i]['elapsed']);
         },
+        // clear timer and heatmap object and make sure the play icon shows 
         clear : function() {
-            // clearTimeout(this.timer);
-            // this.timer = 0;
+            clearTimeout(this.timer);
+            this.timer = 0;
             
-            // this.heatmap.clear();
-            // this.canvas.hide();
-            // chrome.runtime.sendMessage(null, { action : 'show_play_icon' }, function(response){});
+            this.heatmap.clear();
+            this.canvas.hide();
+            chrome.runtime.sendMessage(null, { action : 'show_play_icon' }, function(response){});
         }
     };
 

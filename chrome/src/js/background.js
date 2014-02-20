@@ -30,6 +30,7 @@ function onMsg(msg, sender, sendResponse) {
             });
             break;
         case 'show_icon':
+            // initial display of the icon in the address bar
             chrome.pageAction.show(sender.tab.id);
             sendResponse({});
             break;
