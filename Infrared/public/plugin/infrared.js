@@ -82,7 +82,7 @@ var Infrared = {
             return;
         }
 
-        var url = Infrared.pluginGlobals.server_endpoint+'/api/domains/'+window.location.hostname+'/clicks',
+        var url = Infrared.pluginGlobals.server_endpoint+'/api/clicks',
             x = new XMLHttpRequest(),
             data = Infrared.storage.flush();
 
