@@ -60,7 +60,9 @@ class ApiController extends \Phalcon\Mvc\Controller
             $domain = new Domain;
             $domain->unserialize($cache);
         } else {
-            $domain = Domain::query()->where("domain_name = :domain_name:")
+            $domain = Domain::query()
+                        ->where("domain_name = :domain_name:")
+                        ->andWhere("confirmed = 1")
                         ->bind(array("domain_name" => $domainName))
                         ->execute()->getFirst();
 
