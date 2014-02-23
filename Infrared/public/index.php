@@ -25,8 +25,8 @@ try {
         return new ClickStorage($di['cache']);
     });
 
-    $di->set('session', function(){
-        $session = new Phalcon\Session\Adapter\Files();
+    $di->set('session', function() use ($config) {
+        $session = new Phalcon\Session\Adapter\Files($config['session']);
         $session->start();
         return $session;
     }, true);
