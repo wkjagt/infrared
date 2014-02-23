@@ -1,7 +1,10 @@
 {
     "require": {
         "mandrill/mandrill": "1.0.50",
-        "jeremykendall/php-domain-parser": "0.0.*"
+        "jeremykendall/php-domain-parser": "0.0.*",
+        "guzzle/guzzle": "v3.8.1",
+        "symfony/dom-crawler": "v2.3.10",
+        "symfony/css-selector": "v2.4.2"
     },
     "autoload": {
         "psr-0": { "Infrared": "src/" }
