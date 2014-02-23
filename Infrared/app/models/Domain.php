@@ -15,6 +15,31 @@ class Domain extends \Phalcon\Mvc\Model
         $this->belongsTo("user_id", "User", "id");
     }
 
+    public function confirm($code, $subdomain = '')
+    {
+        if($subdomain) {
+            $subdomain = trim($subdomain, '. ') . '.';
+        }
+        $url = sprintf('http://%s%s', $subdomain, $this->domain_name);
+
+        $client = new Guzzle\Http\Client($url);
+        try {
+            $html = $client->get('/')->send()->getBody()->__toString();
+        } catch(\Exception $e) {
+            throw new DomainConfirmationException;
+        }
+
+        $crawler = new Symfony\Component\DomCrawler\Crawler($html);
+        $elem = $crawler->filter('#'.$code);
+
+        if(count($elem)) {
+            $this->confirmed = 1;
+            $this->save();
+        } else {
+            throw new DomainConfirmationException;
+        }
+    }
+
     public function getReplacements()
     {
         return $this->replacements
@@ -37,8 +62,8 @@ class Domain extends \Phalcon\Mvc\Model
     {
         $exists = (bool) Domain::query()
             ->where("domain_name = :domain_name:")
-            ->andWhere("user_id = :user_id:")
-            ->bind(array("domain_name" => $this->domain_name, "user_id" => $this->user_id))
+            ->andWhere("confirmed = 1")
+            ->bind(array("domain_name" => $this->domain_name))
             ->execute()
             ->count();
 
