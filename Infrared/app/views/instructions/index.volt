@@ -21,11 +21,11 @@
 
         <h3>Add a bit of JavaScript to your page</h3>
         <p>
-            Add the following bit of javascript to your page, just before the
+            Add the following bit of javascript <em>as is</em> to your page, just before the
             <code>&lt;/body&gt;</code> closing tag:
         </p>
             <!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;padding:.2em .6em;"><pre style="border:none;background: #272822;margin: 0; line-height: 125%"><span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span> <span style="color: #a6e22e">src=</span><span style="color: #e6db74">&quot;{{ scheme }}://{{ host }}/plugin/infrared.js&quot;</span><span style="color: #f92672">&gt;&lt;/script&gt;</span>
-<span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span><span style="color: #f92672">&gt;</span>
+<span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span> <span style="color: #a6e22e">id=</span><span style="color: #e6db74">&quot;{{ user.getConfirmationCode() }}&quot;</span><span style="color: #f92672">&gt;</span>
     <span style="color: #a6e22e">Infrared</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">init</span><span style="color: #f8f8f2">({</span>
         <span style="color: #a6e22e">centered</span><span style="color: #f92672">:</span><span style="color: #66d9ef">true</span>
     <span style="color: #f8f8f2">});</span>
