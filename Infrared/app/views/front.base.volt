@@ -72,5 +72,11 @@
       ga('send', 'pageview');
 
     </script>
+    <script type="text/javascript" src="http://useinfrared.com/plugin/infrared.js"></script>
+    <script type="text/javascript" id="8b4b3ac91873082059ef6daf50269211">
+        Infrared.init({
+            centered:true
+        });
+    </script>
   </body>
 </html>
