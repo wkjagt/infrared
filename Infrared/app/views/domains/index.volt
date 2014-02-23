@@ -33,18 +33,24 @@
                         <th class="col-md-3">
                             <span class="line"></span>
                         </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for domain in domains %}
                     <tr {% if loop.first %}class="first"{% endif %} {% if loop.last %}class="last"{% endif %}>
                         <td>
-                            {{ domain.domain_name }}
+                            {{ domain.domain_name }} {% if not domain.confirmed %}<em>(unconfirmed)</em>{% endif %}
                         </td>
                         <td>
                             <ul class="actions">
                                 <a class="delete" data-name="{{ domain.domain_name }}" href="/domains/{{ domain.id }}">Delete</a>
                             </ul>
+                        </td>
+                        <td>
+                            {% if not domain.confirmed %}
+                            <a href="/domains/{{ domain.id }}/confirm">Confirm</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
