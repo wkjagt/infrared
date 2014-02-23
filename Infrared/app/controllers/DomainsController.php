@@ -35,7 +35,7 @@ class DomainsController extends \Phalcon\Mvc\Controller
 
             $this->flash->success(
                 sprintf('The domain %s was successfully registered.', $domainName));
-            return $this->response->redirect(array('for' => 'domains'));
+            return $this->response->redirect(array('for' => 'confirm_domain', 'id' => $domain->id));
             
         } catch(DomainExistsException $e) {
             $this->flash->error('You\'ve already registered that domain');
@@ -46,13 +46,44 @@ class DomainsController extends \Phalcon\Mvc\Controller
         }
     }
 
+    public function confirmAction()
+    {
+        if(!$domain = $this->user->getDomain($this->dispatcher->getParam("id"))) {
+            echo '404';die;
+        }
+        $this->view->setVar("domain", $domain);
+    }
+
+    public function confirmPostAction()
+    {
+        $this->view->disable();
+
+        if(!$domain = $this->user->getDomain($this->dispatcher->getParam("id"))) {
+            echo '404';die;
+        }
+
+        try {
+            $domain->confirm($this->user->getConfirmationCode(),
+                             $this->request->getPost('subdomain'));            
+            $this->flash->error(
+                sprintf('The domain %s was successfully confirmed.', $domain->domain_name));
+            return $this->response->redirect(array('for' => 'domains'));
+
+        } catch(DomainConfirmationException $e) {
+            $this->flash->success(
+                sprintf('There was an error confirming the domain %s.', $domain->domain_name));
+            return $this->response->redirect(array('for' => 'confirm_domain', 'id' => $domain->id));
+        }        
+    }
+
+
     public function deleteAction()
     {
         $this->view->disable();
-        if($domain = Domain::findFirst($this->request->getPost('id'))) {
+        if($domain = $this->user->getDomain($this->dispatcher->getParam("id"))) {
+            $domain->delete();
             $this->flash->success(
                 sprintf('The domain %s was successfully deleted.', $domain->domain_name));
-            $domain->delete();
         }
     }
 }
