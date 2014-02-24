@@ -33,11 +33,9 @@ try {
 
     //Set up the flash service
     $di->set('flash', function() {
-        return new Phalcon\Flash\Session(array(
-            'error' => 'alert alert-danger',
-            'success' => 'alert alert-success',
-            'notice' => 'alert alert-info',
-        ));
+        $f = new Phalcon\Flash\Session();
+        $f->setAutomaticHtml(false);
+        return $f;
     });
 
     $di->set('mail_sender', function() use ($config) {

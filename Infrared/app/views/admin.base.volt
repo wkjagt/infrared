@@ -41,7 +41,7 @@
     <header class="navbar navbar-inverse" role="banner">{% include 'includes/header.volt' %}</header>
     <div id="sidebar-nav">{% include 'includes/sidebar.volt' %}</div>
     <div class="content">
-        {{ flash.output() }}
+        {% include 'admin.messages.volt' %}
         {% block content %}{% endblock %}
     </div>
 
