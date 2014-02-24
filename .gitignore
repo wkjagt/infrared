@@ -2,4 +2,5 @@ vendor
 composer.lock
 Infrared/templates/cache
 Infrared/app/config/config.php
+Infrared/app/compiled-templates/*
 .DS_Store
