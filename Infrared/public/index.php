@@ -6,7 +6,7 @@ try {
     $config = require '../app/config/config.php';
 
     //Register an autoloader
-    $loader = new \Phalcon\Loader();
+    $loader = new Phalcon\Loader();
     $loader->registerDirs([
         '../app/controllers/',
         '../app/models/',
@@ -33,7 +33,11 @@ try {
 
     //Set up the flash service
     $di->set('flash', function() {
-        return new \Phalcon\Flash\Session();
+        return new Phalcon\Flash\Session(array(
+            'error' => 'alert alert-danger',
+            'success' => 'alert alert-success',
+            'notice' => 'alert alert-info',
+        ));
     });
 
     $di->set('mail_sender', function() use ($config) {
@@ -41,7 +45,7 @@ try {
     });
 
     $di->set('db', function() use ($config){
-        return new \Phalcon\Db\Adapter\Pdo\Mysql([
+        return new Phalcon\Db\Adapter\Pdo\Mysql([
             "host" => $config['db']['host'],
             "username" => $config['db']['user'],
             "password" => $config['db']['pass'],
@@ -64,7 +68,7 @@ try {
 
     //Setup the view component
     $di->set('view', function(){
-        $view = new \Phalcon\Mvc\View();
+        $view = new Phalcon\Mvc\View();
         $view->setViewsDir('../app/views/');
 
         $view->registerEngines([
@@ -76,7 +80,7 @@ try {
 
     //Setup a base URI so that all generated URIs include the "tutorial" folder
     $di->set('url', function(){
-        $url = new \Phalcon\Mvc\Url();
+        $url = new Phalcon\Mvc\Url();
         return $url;
     });
 
@@ -106,7 +110,7 @@ try {
         return new Pdp\Parser($pslManager->getList());
     });
 
-    $application = new \Phalcon\Mvc\Application($di);
+    $application = new Phalcon\Mvc\Application($di);
     echo $application->handle()->getContent();
 
 } catch(\Phalcon\Exception $e) {

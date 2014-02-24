@@ -41,11 +41,7 @@
     <header class="navbar navbar-inverse" role="banner">{% include 'includes/header.volt' %}</header>
     <div id="sidebar-nav">{% include 'includes/sidebar.volt' %}</div>
     <div class="content">
-        {% if flash.output() %}
-        <div class="alert alert-success">
-            <i class="icon-ok-sign"></i> {{ flash.output }}
-        </div>
-        {% endif %}
+        {{ flash.output() }}
         {% block content %}{% endblock %}
     </div>
 
