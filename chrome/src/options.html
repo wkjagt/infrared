@@ -27,14 +27,17 @@
                 </div>
             </header>
             <section id="subscribe" class="clearfix">
-                <div class="col-md-10 col-md-offset-1 col-sm-8 col-sm-offset-2">
+                <div class="col-md-10 col-md-offset-1">
                      <div class="row">
                         <form role="form" action="/login" method="post">
-                            <div class="col-md-9 col-sm-9">
-                                <input type="text" id="apikey" name="email" class="form-control input-lg" placeholder="Your API key" required />
+                            <div class="col-md-12" style="margin-bottom:15px">
+                                <input type="text" id="apikey" name="apikey" class="form-control input-lg" placeholder="Your API key" required />
+                            </div>
+                            <div class="col-md-12" style="margin-bottom:15px">
+                                <input type="text" id="publickey" name="publickey" class="form-control input-lg" placeholder="Your public key" required />
                             </div>
                             <input style="display:none;" type="text" id="phonehome" name="phonehome" value="http://useinfrared.com">
-                            <div class="col-md-3 col-sm-3 ">
+                            <div class="col-md-2">
                                 <button id="save" class="btn btn-block btn-lg btn-theme">Save</button>
                             </div>
                         </form>
@@ -55,24 +58,3 @@
     <script src="js/options.js"></script>
   </body>
 </html>
-
-
-
-
-<!--html>
-<head><title>Infrared API key</title></head>
-
-<body>
-
-Infrared API key:
-<input type="text" id="apikey">
-
-<br>
-<div id="status"></div>
-<button id="save">Save</button>
-</body>
-
-<script src="js/jquery.min.js"></script>
-<script src="js/options.js"></script>
-
-</html-->

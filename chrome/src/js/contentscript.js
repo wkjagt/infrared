@@ -117,7 +117,13 @@
     };
 
     $(window).ready(function(){
-        infrared.init(window);
+        chrome.runtime.sendMessage(null, {
+            action : 'get_publickey'
+        }, function(publickey) {
+            if($('script#'+publickey).length > 0) {
+                infrared.init(window);            
+            }
+        });
     });
 })(jQuery, window);
 

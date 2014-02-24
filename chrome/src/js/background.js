@@ -42,6 +42,9 @@ function onMsg(msg, sender, sendResponse) {
                     "38" : "img/play-icon-black-38.png"
                 }
             });
+            break;
+        case 'get_publickey':
+            sendResponse(localStorage['publickey']);
     }
 
 };
