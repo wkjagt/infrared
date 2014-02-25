@@ -48,7 +48,7 @@ class User extends \Phalcon\Mvc\Model
         $this->modified = date('Y-m-d H:i:s');
     }
 
-    public function getConfirmationCode()
+    public function getPublicKey()
     {
         return md5(self::salt.$this->id);
     }

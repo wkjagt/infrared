@@ -63,7 +63,7 @@ class DomainsController extends \Phalcon\Mvc\Controller
         }
 
         try {
-            $domain->confirm($this->user->getConfirmationCode(),
+            $domain->confirm($this->user->getPublicKey(),
                              $this->request->getPost('subdomain'));            
             $this->flash->error(
                 sprintf('The domain %s was successfully confirmed.', $domain->domain_name));

@@ -25,7 +25,7 @@
             <code>&lt;/body&gt;</code> closing tag:
         </p>
             <!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;padding:.2em .6em;"><pre style="border:none;background: #272822;margin: 0; line-height: 125%"><span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span> <span style="color: #a6e22e">src=</span><span style="color: #e6db74">&quot;{{ scheme }}://{{ host }}/plugin/infrared.js&quot;</span><span style="color: #f92672">&gt;&lt;/script&gt;</span>
-<span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span> <span style="color: #a6e22e">id=</span><span style="color: #e6db74">&quot;{{ user.getConfirmationCode() }}&quot;</span><span style="color: #f92672">&gt;</span>
+<span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span> <span style="color: #a6e22e">id=</span><span style="color: #e6db74">&quot;{{ user.getPublicKey() }}&quot;</span><span style="color: #f92672">&gt;</span>
     <span style="color: #a6e22e">Infrared</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">init</span><span style="color: #f8f8f2">({</span>
         <span style="color: #a6e22e">centered</span><span style="color: #f92672">:</span><span style="color: #66d9ef">true</span>
     <span style="color: #f8f8f2">});</span>
@@ -42,18 +42,27 @@
             To see an animated heatmap of your user's click behaviour, you need to install
             <a target="_blank" href="https://chrome.google.com/webstore/detail/infrared/micfbdajidndejakijomaiipgjbdjehj">our
             Chrome extension</a>. Once the extension is installed, go to the options for the extension
-            and enter your API key: <em>{{ user.api_key }}</em>.
+            and enter your API key and public key (see below).
             Go to the page on your site for which you want to see a heatmap, and click the
-            Infrared logo that's added to the right of your browser's address bar to start the animation.
+            play button that's added to the right of your browser's address bar to start the animation.
         </p>
 
+        <h3>Your keys</h3>
+        <p>
+            <table>
+                <tr>
+                    <td>Your API key:</td>
+                    <td><code>{{ user.api_key }}</code></td>
+                </tr>
+                <tr>
+                    <td>Your public key:</td>
+                    <td><code>{{ user.getPublicKey() }}</code></td>
+                </tr>
+            </table>
+        </p>
         <p>
             That's it! Have fun!
         </p>
-        <div class="alert alert-success">
-            Your API key: {{ user.api_key }}
-        </div>
-
      </div>
  </div>
 {% endblock %}
