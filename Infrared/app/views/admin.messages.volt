@@ -1,9 +1,6 @@
 
 {% set messages = flash.getMessages() %}
 
-{% if messages|length %}
-sdc
-{% endif %}
 {% for type, msgs in messages %}{% for msg in msgs %}
 {% if type == 'error' %}
 <div class="alert alert-danger"><i class="icon-remove-sign"></i>{{ msg  }}</div>

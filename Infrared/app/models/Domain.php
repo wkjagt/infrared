@@ -76,7 +76,8 @@ class Domain extends \Phalcon\Mvc\Model
     {
         $valid = preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $this->domain_name) //valid chars check
                  && preg_match("/^.{1,253}$/", $this->domain_name) //overall length check
-                 && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $this->domain_name); //length of each label
+                 && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $this->domain_name) //length of each label
+                 && !empty($this->domain_name);
 
         if(!$valid) {
             throw new InvalidDomainNameException;
