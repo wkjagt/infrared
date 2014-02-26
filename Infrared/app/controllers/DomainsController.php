@@ -31,7 +31,17 @@ class DomainsController extends \Phalcon\Mvc\Controller
             $domain->user_id = $this->user->id;
             $domain->domain_name = $domainName;
             $domain->replacements = json_encode(array(':/\\d+:' => '/id'));
-            $domain->save();
+
+            if(!$domain->save()) {
+                foreach($domain->getMessages() as $msg) {
+                    switch($msg->getType()) {
+                        case 'PresenceOf':
+                            $this->flash->error('The domain name is required.');
+                            return $this->response->redirect(array('for' => 'create_domain'));            
+
+                    }
+                }
+            }
 
             $this->flash->success(
                 sprintf('The domain %s was successfully registered.', $domainName));
