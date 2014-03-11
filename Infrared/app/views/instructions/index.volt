@@ -24,18 +24,41 @@
             Add the following bit of javascript <em>as is</em> to your page, just before the
             <code>&lt;/body&gt;</code> closing tag:
         </p>
-            <!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;padding:.2em .6em;"><pre style="border:none;background: #272822;margin: 0; line-height: 125%"><span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span> <span style="color: #a6e22e">src=</span><span style="color: #e6db74">&quot;{{ scheme }}://{{ host }}/plugin/infrared.js&quot;</span><span style="color: #f92672">&gt;&lt;/script&gt;</span>
+            
+            <!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;padding:.2em .6em;"><pre style="border:none;background: #272822;margin: 0; line-height: 125%">
 <span style="color: #f92672">&lt;script </span><span style="color: #a6e22e">type=</span><span style="color: #e6db74">&quot;text/javascript&quot;</span> <span style="color: #a6e22e">id=</span><span style="color: #e6db74">&quot;{{ user.getPublicKey() }}&quot;</span><span style="color: #f92672">&gt;</span>
-    <span style="color: #a6e22e">Infrared</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">init</span><span style="color: #f8f8f2">({</span>
-        <span style="color: #a6e22e">centered</span><span style="color: #f92672">:</span><span style="color: #66d9ef">true</span>
-    <span style="color: #f8f8f2">});</span>
+    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">infraredOptions</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{ </span><span style="color: #a6e22e">centered</span><span style="color: #f92672"> : </span><span style="color: #66d9ef">true</span><span style="color: #f8f8f2"> };</span>
+
+    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">ir</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">document.</span><span style="color: #a6e22e">createElement</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;script&#39;</span><span style="color: #f8f8f2">);</span>
+    <span style="color: #a6e22e">ir</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">src</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;https:&#39;</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">document.</span><span style="color: #a6e22e">location</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">protocol</span> <span style="color: #f92672">?</span> <span style="color: #e6db74">&#39;https://&#39;</span> <span style="color: #f92672">:</span> 
+        <span style="color: #e6db74">&#39;http://&#39;</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&#39;{{ host }}/plugin/infrared.js&#39;</span><span style="color: #f8f8f2">;</span>
+    <span style="color: #a6e22e">ir</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">setAttribute</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;async&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;true&#39;</span><span style="color: #f8f8f2">);</span>
+    <span style="color: #a6e22e">ir</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">addEventListener</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;load&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span> <span style="color: #f8f8f2">(</span><span style="color: #a6e22e">e</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span> <span style="color: #a6e22e">Infrared</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">init</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">infraredOptions</span><span style="color: #f8f8f2">);</span> <span style="color: #f8f8f2">},</span> <span style="color: #66d9ef">false</span><span style="color: #f8f8f2">);</span>
+    <span style="color: #f8f8f2">document.</span><span style="color: #a6e22e">documentElement</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">firstChild</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">appendChild</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">ir</span><span style="color: #f8f8f2">);</span>
+    <span style="color: #f8f8f2">}());</span>
 <span style="color: #f92672">&lt;/script&gt;</span>
 </pre></div>
 
-        <p>
-            Use the <code>centered</code> option when the content of your website is centered.
-            This way, clicks will be recorded and displayed correctly for any screen resolution.
-        </p>
+        <ul>
+            <li>
+                A variable <code>infraredOptions</code> is declared. Use the <code>centered</code>
+                option when the content of your website is centered. This way, clicks will be
+                recorded and displayed correctly for any screen resolution.
+            </li>
+            <li>
+                The script tag has an id. When activating a domain in your Infrared account, we
+                use this to verify you actually own the domain you're activating. (No one else would
+                be able to place this unique token on the domain you're activating.)
+            </li>
+            <li>
+                Our library will be loaded over https if your site is in https so we won't break
+                your security.
+            </li>
+            <li>
+                Our library is loaded asynchronously, so it won't block your page load. If, for 
+                some reason, we can't serve you the library, at least your site will still load.
+            </li>
+        </ul>
 
         <h3>Install our chrome extension</h3>
         <p>
